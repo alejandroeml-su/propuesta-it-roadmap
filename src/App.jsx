@@ -358,6 +358,24 @@ const marketSalaries = {
   "Desarrollador Fullstack Senior": 1500
 };
 
+const trackToArea = {
+  "Inventario Tecnológico Riguroso": "Operaciones e Infraestructura",
+  "Estabilización de Cuartos de Comunicaciones": "Operaciones e Infraestructura",
+  "Centralización de Compras TI": "Operaciones e Infraestructura",
+  "Despliegue del Service Desk": "Operaciones e Infraestructura",
+  "Gestión de Incidentes y SLAs": "Operaciones e Infraestructura",
+  "Soporte Estructurado ERP / HIS / Odoo": "Sistemas Core Empresariales",
+  "Control de Cambios (CAB)": "Sistemas Core Empresariales",
+  "Gestión de Problemas": "Operaciones e Infraestructura",
+  "Ciberseguridad y Cumplimiento": "Cloud & Ciberseguridad",
+  "Continuidad y Recuperación": "Cloud & Ciberseguridad",
+  "Estandarización de Desarrollo (SDLC)": "Fábrica de Software",
+  "Gobierno de Datos e Integraciones": "Fábrica de Software",
+  "Gestión del Portafolio de Proyectos": "Sistemas Core Empresariales",
+  "Optimización de Infraestructura Cloud": "Cloud & Ciberseguridad",
+  "Compras TI y Mejora Continua": "Operaciones e Infraestructura"
+};
+
 const timelineTasks = [];
 let currentDayCounter = 0;
 phases.forEach((phase) => {
@@ -371,7 +389,8 @@ phases.forEach((phase) => {
   phase.tracks.forEach((track) => {
     track.tasks.forEach((task) => {
       const taskDate = new Date(2026, 3, 15);
-      taskDate.setDate(taskDate.getDate() + Math.round(currentDayCounter));
+      const daysOffset = Math.round(currentDayCounter);
+      taskDate.setDate(taskDate.getDate() + daysOffset);
 
       let deliverable = "";
       let verb = task.split(" ")[0].toLowerCase();
@@ -385,13 +404,19 @@ phases.forEach((phase) => {
         deliverable = "Evidencia de ejecución de la tarea y validación de usuarios.";
       }
 
+      const mainArea = trackToArea[track.area] || "Operaciones e Infraestructura";
+
       timelineTasks.push({
+        id: timelineTasks.length,
         phaseName: phase.name,
         phaseColor: phase.color,
         phaseAccent: phase.accent,
         phaseIcon: phase.icon,
         track: track.area,
+        mainArea: mainArea,
         task: task,
+        daysOffset: daysOffset,
+        duration: Math.max(1, Math.round(daysPerTask)),
         date: taskDate.toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' }),
         objective: `Asegurar el cumplimiento del área: ${track.area}.`,
         deliverable: deliverable
@@ -400,6 +425,7 @@ phases.forEach((phase) => {
     });
   });
 });
+
 
 
 const hiringMilestones = [
@@ -1065,83 +1091,106 @@ export default function RoadmapApp() {
           </div>
 
           {/* CRONOGRAMA EJECUCION (MAIN BAR) */}
+          {/* CRONOGRAMA EJECUCION (GANTT 4 CANALES) */}
           <div style={{ position: "relative", background: "rgba(255,255,255,0.02)", padding: "24px 24px", borderRadius: 16, border: "1px solid rgba(255,255,255,0.05)" }}>
-            {/* Indicador de Porcentaje en la esquina superior derecha */}
-            <div style={{ position: "absolute", top: 20, right: 24, display: "flex", flexDirection: "column", alignItems: "flex-end", zIndex: 10 }}>
-              <div style={{ fontSize: 9, color: "#6a7490", marginBottom: 4, textTransform: "uppercase", fontWeight: 700, letterSpacing: 0.5 }}>Avance</div>
-              <div style={{ 
-                background: `${timelineTasks[timelineIndex].phaseAccent}15`, 
-                color: timelineTasks[timelineIndex].phaseAccent, 
-                padding: "4px 12px", borderRadius: 20, fontSize: 16, fontWeight: 800, 
-                border: `1px solid ${timelineTasks[timelineIndex].phaseAccent}55`, 
-                boxShadow: `0 0 15px ${timelineTasks[timelineIndex].phaseAccent}22`, 
-                transition: "all 0.3s ease", display: "inline-block" 
+            <div style={{ textAlign: "center", marginBottom: 30 }}>
+              <h2 style={{ fontSize: 18, color: "#7678ED", marginBottom: 4 }}>Cronograma de Ejecución por Área (Gantt)</h2>
+              <p style={{ fontSize: 12, color: "#6a7490", margin: 0 }}>Desliza sobre los bloques para identificar actividades o haz clic para seleccionarlas</p>
+            </div>
+
+            <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 30 }}>
+              {[
+                { name: "Operaciones e Infraestructura", color: "#0F4C5C", accent: "#5BC0BE" },
+                { name: "Sistemas Core Empresariales", color: "#1B3A4B", accent: "#F0A500" },
+                { name: "Cloud & Ciberseguridad", color: "#6B2737", accent: "#E63946" },
+                { name: "Fábrica de Software", color: "#3D348B", accent: "#7678ED" }
+              ].map((areaArea, aIdx) => {
+                const totalTimelineDays = Math.max(...timelineTasks.map(t => t.daysOffset + t.duration));
+                const tasksInArea = timelineTasks.filter(t => t.mainArea === areaArea.name);
+                
+                return (
+                  <div key={aIdx} style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                    {/* Header del Canal */}
+                    <div style={{ width: 140, flexShrink: 0, textAlign: "right" }}>
+                      <div style={{ fontSize: 11, fontWeight: 700, color: areaArea.accent, lineHeight: 1.2 }}>{areaArea.name}</div>
+                    </div>
+                    {/* Pista del Canal */}
+                    <div style={{ flex: 1, position: "relative", height: 32, background: "rgba(255,255,255,0.03)", borderRadius: 8, border: "1px solid rgba(255,255,255,0.05)" }}>
+                      {tasksInArea.map((t) => {
+                        const isSelected = timelineIndex === t.id;
+                        const isHovered = hoveredTaskIndex === t.id;
+                        const leftPct = (t.daysOffset / totalTimelineDays) * 100;
+                        const widthPct = (t.duration / totalTimelineDays) * 100;
+                        
+                        return (
+                          <div
+                            key={t.id}
+                            onMouseEnter={() => setHoveredTaskIndex(t.id)}
+                            onMouseLeave={() => setHoveredTaskIndex(null)}
+                            onClick={() => setTimelineIndex(t.id)}
+                            style={{
+                              position: "absolute",
+                              left: `${leftPct}%`,
+                              width: `${widthPct}%`,
+                              top: 4,
+                              height: 24,
+                              background: isSelected ? t.phaseAccent : (isHovered ? `${t.phaseAccent}dd` : `${t.phaseAccent}88`),
+                              borderRadius: 4,
+                              cursor: "pointer",
+                              boxShadow: isSelected ? `0 0 10px ${t.phaseAccent}88` : "none",
+                              transition: "all 0.2s",
+                              border: isSelected ? "1px solid #fff" : "1px solid transparent",
+                              zIndex: isHovered || isSelected ? 10 : 1
+                            }}
+                          />
+                        );
+                      })}
+                    </div>
+                  </div>
+                );
+              })}
+
+              {/* Eje de Tiempo (Meses/Periodos aproximados) */}
+              <div style={{ display: "flex", marginLeft: 152, marginTop: 10, position: "relative", height: 20 }}>
+                {phases.map((p, pIdx) => {
+                  const tasksInPhase = timelineTasks.filter(t => t.phaseName === p.name);
+                  if (tasksInPhase.length === 0) return null;
+                  const startOffset = Math.min(...tasksInPhase.map(t => t.daysOffset));
+                  const endOffset = Math.max(...tasksInPhase.map(t => t.daysOffset + t.duration));
+                  const totalTimelineDays = Math.max(...timelineTasks.map(t => t.daysOffset + t.duration));
+                  const leftPct = (startOffset / totalTimelineDays) * 100;
+                  const widthPct = ((endOffset - startOffset) / totalTimelineDays) * 100;
+                  
+                  return (
+                    <div key={pIdx} style={{ position: "absolute", left: `${leftPct}%`, width: `${widthPct}%`, textAlign: "center", borderTop: `2px solid ${p.accent}55`, paddingTop: 4 }}>
+                      <span style={{ fontSize: 9, color: p.accent, fontWeight: 700, textTransform: "uppercase" }}>{p.name.split(":")[0]}</span>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Tooltip Task Flotante */}
+            {hoveredTaskIndex !== null && (
+              <div style={{
+                position: "fixed",
+                bottom: 40, 
+                right: 40,
+                background: "#1e2538", border: `1px solid ${timelineTasks[hoveredTaskIndex].phaseAccent}`,
+                padding: "12px 16px", borderRadius: 10, width: 280, zIndex: 100,
+                boxShadow: "0 10px 40px rgba(0,0,0,0.8)", pointerEvents: "none"
               }}>
-                {Math.round(((timelineIndex + 1) / timelineTasks.length) * 100)}%
-              </div>
-            </div>
-            <div style={{ textAlign: "center", marginBottom: 20 }}>
-              <h2 style={{ fontSize: 18, color: "#7678ED", marginBottom: 4 }}>Cronograma de Ejecución Interactivo</h2>
-              <p style={{ fontSize: 12, color: "#6a7490", margin: 0 }}>Desliza sobre la barra para identificar actividades o haz clic para adelantar</p>
-            </div>
-
-            <div style={{ position: "relative", marginBottom: 30 }}>
-              <div style={{ height: 16, background: "rgba(255,255,255,0.05)", borderRadius: 8, display: "flex", overflow: "visible", position: "relative" }}>
-                {/* Progress Fill */}
-                <div style={{
-                  position: "absolute", top: 0, left: 0, height: "100%",
-                  background: `linear-gradient(90deg, ${timelineTasks[timelineIndex].phaseAccent}44, ${timelineTasks[timelineIndex].phaseAccent})`,
-                  width: `${((timelineIndex + 1) / timelineTasks.length) * 100}%`,
-                  transition: "width 0.4s ease-out, background 0.4s ease-out",
-                  borderRadius: 8, zIndex: 1, boxShadow: `0 0 10px ${timelineTasks[timelineIndex].phaseAccent}66`
-                }} />
-
-                {/* Hover Segments */}
-                {timelineTasks.map((t, idx) => (
-                  <div
-                    key={idx}
-                    onMouseEnter={() => setHoveredTaskIndex(idx)}
-                    onMouseLeave={() => setHoveredTaskIndex(null)}
-                    onClick={() => setTimelineIndex(idx)}
-                    style={{
-                      flex: 1, height: "100%", zIndex: 2,
-                      borderRight: "1px solid rgba(255,255,255,0.02)",
-                      cursor: "pointer",
-                      background: hoveredTaskIndex === idx ? "rgba(255,255,255,0.2)" : "transparent",
-                    }}
-                  />
-                ))}
-              </div>
-
-              {/* Tooltip Task */}
-              {hoveredTaskIndex !== null && (
-                <div style={{
-                  position: "absolute",
-                  bottom: "30px", 
-                  left: `${(hoveredTaskIndex / timelineTasks.length) * 100}%`,
-                  transform: "translateX(-50%)",
-                  background: "#1e2538", border: `1px solid ${timelineTasks[hoveredTaskIndex].phaseAccent}`,
-                  padding: "12px 16px", borderRadius: 10, width: 240, zIndex: 10,
-                  boxShadow: "0 10px 25px rgba(0,0,0,0.6)", pointerEvents: "none"
-                }}>
-                  <div style={{ fontSize: 11, color: timelineTasks[hoveredTaskIndex].phaseAccent, fontWeight: 800, marginBottom: 4 }}>
-                    🗓️ {timelineTasks[hoveredTaskIndex].date} · Tarea {hoveredTaskIndex + 1}
-                  </div>
-                  <div style={{ fontSize: 12, color: "#fff", lineHeight: 1.4, fontWeight: 500 }}>
-                    {timelineTasks[hoveredTaskIndex].task}
-                  </div>
-                  <div style={{ fontSize: 10, color: "#a0a8bc", marginTop: 4 }}>
-                    📍 Área: {timelineTasks[hoveredTaskIndex].track}
-                  </div>
+                <div style={{ fontSize: 11, color: timelineTasks[hoveredTaskIndex].phaseAccent, fontWeight: 800, marginBottom: 4 }}>
+                  🗓️ {timelineTasks[hoveredTaskIndex].date} · Tarea {timelineTasks[hoveredTaskIndex].id + 1}
                 </div>
-              )}
-              
-              <div style={{ display: "flex", justifyContent: "space-between", fontSize: 10, marginTop: 10, color: "#6a7490" }}>
-                <span>Inicio Proyectado (15 Abril)</span>
-                <span>Progreso: {Math.round(((timelineIndex + 1) / timelineTasks.length) * 100)}%</span>
-                <span>Cierre Roadmap</span>
+                <div style={{ fontSize: 13, color: "#fff", lineHeight: 1.4, fontWeight: 500 }}>
+                  {timelineTasks[hoveredTaskIndex].task}
+                </div>
+                <div style={{ fontSize: 10, color: "#a0a8bc", marginTop: 6, padding: "4px 8px", background: "rgba(255,255,255,0.05)", borderRadius: 4, display: "inline-block" }}>
+                  📍 {timelineTasks[hoveredTaskIndex].track}
+                </div>
               </div>
-            </div>
+            )}
             
             {/* Contenido Visual Tarea actual */}
             <div style={{
@@ -1157,21 +1206,29 @@ export default function RoadmapApp() {
                     {timelineTasks[timelineIndex].phaseName}
                   </div>
                   <div style={{ fontSize: 14, fontWeight: 600, color: "#e0e0e0", marginTop: 2 }}>
-                    🗓️ {timelineTasks[timelineIndex].date}
+                    🗓️ {timelineTasks[timelineIndex].date} (Tarea {timelineTasks[timelineIndex].id + 1} de {timelineTasks.length})
                   </div>
                 </div>
               </div>
 
-              <div style={{ marginBottom: 14 }}>
-                <div style={{ fontSize: 11, color: "#6a7490", marginBottom: 4 }}>Área / Hito</div>
-                <div style={{ fontSize: 14, fontWeight: 600, color: "#fff", background: "rgba(255,255,255,0.04)", padding: "6px 10px", borderRadius: 8, display: "inline-block" }}>
-                  {timelineTasks[timelineIndex].track}
+              <div style={{ marginBottom: 14, display: "flex", gap: 8 }}>
+                <div>
+                  <div style={{ fontSize: 10, color: "#6a7490", marginBottom: 4 }}>Área Responsable</div>
+                  <div style={{ fontSize: 13, fontWeight: 600, color: "#fff", background: "rgba(255,255,255,0.04)", padding: "4px 10px", borderRadius: 8, display: "inline-block" }}>
+                    {timelineTasks[timelineIndex].mainArea}
+                  </div>
+                </div>
+                <div>
+                  <div style={{ fontSize: 10, color: "#6a7490", marginBottom: 4 }}>Sub-Área / Hito</div>
+                  <div style={{ fontSize: 13, fontWeight: 600, color: "#ccd0da", background: "rgba(255,255,255,0.04)", padding: "4px 10px", borderRadius: 8, display: "inline-block" }}>
+                    {timelineTasks[timelineIndex].track}
+                  </div>
                 </div>
               </div>
 
               <div style={{ marginBottom: 16 }}>
-                <div style={{ fontSize: 11, color: "#6a7490", marginBottom: 4 }}>Tarea en curso</div>
-                <div style={{ fontSize: 14, color: "#ccd0da", lineHeight: 1.5, padding: "0 4px" }}>
+                <div style={{ fontSize: 11, color: "#6a7490", marginBottom: 4 }}>Descripción de la tarea</div>
+                <div style={{ fontSize: 15, color: "#fff", lineHeight: 1.5, padding: "0 4px", fontWeight: 500 }}>
                   {timelineTasks[timelineIndex].task}
                 </div>
               </div>
@@ -1201,7 +1258,8 @@ export default function RoadmapApp() {
                   transition: "all 0.2s"
                 }}
               >
-                ◀ Anterior
+                ◀ Anterior Tarea
+
               </button>
               <button
                 onClick={() => setTimelineIndex(prev => Math.min(timelineTasks.length - 1, prev + 1))}
