@@ -414,7 +414,7 @@ export default function RoadmapApp() {
   const [globalPage, setGlobalPage] = useState("inicio");
   const [activePhase, setActivePhase] = useState(null);
   const [expandedTrack, setExpandedTrack] = useState(null);
-  const [viewMode, setViewMode] = useState("interactive-timeline");
+  const [viewMode, setViewMode] = useState("timeline");
   const [expandedCell, setExpandedCell] = useState(null);
   const [expandedRole, setExpandedRole] = useState(null);
   const [timelineIndex, setTimelineIndex] = useState(0);
@@ -492,7 +492,7 @@ export default function RoadmapApp() {
             GAP Análisis
           </button>
 
-          <button onClick={() => setGlobalPage("to-be")} style={{
+          <button onClick={() => { setGlobalPage("to-be"); setViewMode("timeline"); }} style={{
             display: "flex", alignItems: "center", gap: 12, padding: "12px 16px", borderRadius: 10,
             background: globalPage === "to-be" ? "rgba(118, 120, 237, 0.1)" : "transparent",
             color: globalPage === "to-be" ? "#7678ED" : "#a0a8bc",
