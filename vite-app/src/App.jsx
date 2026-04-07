@@ -224,6 +224,11 @@ const orgStructure = [
     accent: "#5BC0BE",
     headcount: "4",
     justification: "Esta célula es la columna vertebral operativa para soportar más de 200 usuarios y 3 edificios conectando todos los endpoints a las redes seguras.",
+    activities: [
+      "Monitoreo y mantenimiento preventivo/correctivo de enlaces y cuartos de comunicaciones en los 3 edificios.",
+      "Soporte directo nivel 1 a usuarios para software básico, hardware, periféricos y conectividad diaria.",
+      "Control, asignación y auditoría física del inventario de activos de TI e infraestructura física."
+    ],
     roles: [
       {
         title: "Líder de Infraestructura y Redes",
@@ -257,6 +262,11 @@ const orgStructure = [
     accent: "#E63946",
     headcount: "1",
     justification: "Responsable central único para administrar la nube de AWS y velar por la ciberseguridad general del entorno HIS/ERP.",
+    activities: [
+      "Aprovisionamiento, optimización y mantenimiento de la infraestructura nativa en la nube (AWS, EKS).",
+      "Definición y aplicación exhaustiva de políticas de acceso, monitoreo de amenazas y auditoría de ciberseguridad.",
+      "Formulación técnica y ejecución de simulacros para el Plan de Recuperación ante Desastres (DRP)."
+    ],
     roles: [
       {
         title: "Ingeniero de Cloud & Seguridad (Lead)",
@@ -278,6 +288,11 @@ const orgStructure = [
     accent: "#F0A500",
     headcount: "2",
     justification: "Equipo compacto enfocado en velar por el buen funcionamiento y el contacto con los proveedores del HIS y Odoo.",
+    activities: [
+      "Modelado de reglas de negocio y estabilización técnica de los procesos operativos transaccionales en Odoo 18.",
+      "Soporte integral, parametrización operativa y seguimiento continuo para el Sistema de Información Hospitalaria (HIS).",
+      "Control de incidentes críticos, validación de la interoperabilidad financiera y operaciones médicas."
+    ],
     roles: [
       {
         title: "Líder de Desarrollo y de Core / Tech Lead",
@@ -311,6 +326,11 @@ const orgStructure = [
     accent: "#7678ED",
     headcount: "1",
     justification: "Desarrollo on-demand para cubrir brechas con soluciones a medida que reducen fricción operativa.",
+    activities: [
+      "Desarrollo de conectores directos y microservicios para la interoperabilidad entre el ecosistema propio y de terceros.",
+      "Mantenimiento, despliegue y soporte continuo de soluciones front-end/back-end elaboradas a la medida.",
+      "Digitalización y automatización de procesos internos puntuales que ralenticen la cadena operativa diaria."
+    ],
     roles: [
       
       {
@@ -530,8 +550,18 @@ export default function RoadmapApp() {
                       background: `${cell.accent}08`, borderRadius: 8, lineHeight: 1.6,
                       borderLeft: `3px solid ${cell.accent}55`,
                     }}>
-                      <span style={{ fontWeight: 700 }}>¿Por qué esta célula?</span>
-                      <div style={{ marginTop: 4, color: "#a0a8bc" }}>{cell.justification}</div>
+                      <span style={{ fontWeight: 800 }}>¿Por qué esta célula y cuál es su objetivo central?</span>
+                      <div style={{ marginTop: 6, color: "#a0a8bc", marginBottom: 8 }}>{cell.justification}</div>
+                      {cell.activities && (
+                        <div style={{ marginTop: 12, background: "rgba(0,0,0,0.15)", padding: "12px 14px", borderRadius: 8, borderLeft: `2px solid ${cell.accent}44` }}>
+                          <div style={{ fontWeight: 700, fontSize: 10, textTransform: "uppercase", letterSpacing: 0.5, color: cell.accent, marginBottom: 8 }}>🎯 Principales Actividades Departamentales:</div>
+                          <ul style={{ margin: 0, paddingLeft: 18, color: "#a0a8bc", fontSize: 11, display: "flex", flexDirection: "column", gap: 6 }}>
+                            {cell.activities.map((act, idx) => (
+                              <li key={idx} style={{ lineHeight: 1.4 }}>{act}</li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
                     </div>
 
                     {cell.roles.map((role, ri) => {
