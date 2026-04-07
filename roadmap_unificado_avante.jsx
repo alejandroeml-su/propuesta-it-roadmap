@@ -411,6 +411,7 @@ const hiringMilestones = [
 ];
 
 export default function RoadmapApp() {
+  const [globalPage, setGlobalPage] = useState("to-be");
   const [activePhase, setActivePhase] = useState(null);
   const [expandedTrack, setExpandedTrack] = useState(null);
   const [viewMode, setViewMode] = useState("interactive-timeline");
