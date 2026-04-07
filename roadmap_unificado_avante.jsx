@@ -411,7 +411,7 @@ const hiringMilestones = [
 ];
 
 export default function RoadmapApp() {
-  const [globalPage, setGlobalPage] = useState("to-be");
+  const [globalPage, setGlobalPage] = useState("inicio");
   const [activePhase, setActivePhase] = useState(null);
   const [expandedTrack, setExpandedTrack] = useState(null);
   const [viewMode, setViewMode] = useState("interactive-timeline");
@@ -462,6 +462,16 @@ export default function RoadmapApp() {
         <div style={{ padding: "24px 16px", display: "flex", flexDirection: "column", gap: 8, flex: 1 }}>
           <div style={{ fontSize: 10, fontWeight: 700, color: "#4a5270", marginBottom: 8, paddingLeft: 8, textTransform: "uppercase", letterSpacing: 1 }}>Vistas del Roadmap</div>
           
+          <button onClick={() => setGlobalPage("inicio")} style={{
+            display: "flex", alignItems: "center", gap: 12, padding: "12px 16px", borderRadius: 10,
+            background: globalPage === "inicio" ? "rgba(255, 255, 255, 0.08)" : "transparent",
+            color: globalPage === "inicio" ? "#ffffff" : "#a0a8bc",
+            border: "none", cursor: "pointer", transition: "all 0.2s", textAlign: "left", fontWeight: globalPage === "inicio" ? 700 : 500
+          }}>
+            <span style={{ fontSize: 18 }}>🏠</span>
+            INICIO
+          </button>
+
           <button onClick={() => setGlobalPage("as-is")} style={{
             display: "flex", alignItems: "center", gap: 12, padding: "12px 16px", borderRadius: 10,
             background: globalPage === "as-is" ? "rgba(91, 192, 190, 0.1)" : "transparent",
@@ -498,6 +508,24 @@ export default function RoadmapApp() {
       <div style={{ flex: 1, height: "100vh", overflowY: "auto", position: "relative", background: "linear-gradient(160deg, #070b14 0%, #0f1729 40%, #131b2e 100%)" }}>
         
         {/* VISTAS EN CONSTRUCCIÓN */}
+        {globalPage === "inicio" && (
+          <div style={{ height: "100%", paddingBottom: 60, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", animation: "fadeIn 0.8s cubic-bezier(0.1, 0.9, 0.2, 1)" }}>
+            <h1 style={{
+              fontSize: 54, fontWeight: 800, margin: "0 0 16px 0",
+              background: "linear-gradient(90deg, #5BC0BE, #7678ED, #F0A500)",
+              WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", lineHeight: 1.2, textAlign: "center"
+            }}>
+              Tecnología y Transformación Digital
+            </h1>
+            <h2 style={{ fontSize: 28, fontWeight: 500, color: "#ccd0da", margin: "0 0 16px 0", letterSpacing: 1.5 }}>
+              Análisis y Estructuración
+            </h2>
+            <div style={{ fontSize: 16, color: "#6a7490", fontWeight: 700, letterSpacing: 4, textTransform: "uppercase" }}>
+              Abril 2026
+            </div>
+          </div>
+        )}
+
         {globalPage === "as-is" && (
           <div style={{ padding: "80px 40px", maxWidth: 1200, margin: "0 auto", textAlign: "center", animation: "fadeIn 0.4s" }}>
             <div style={{ fontSize: 70, marginBottom: 20 }}>🔍</div>
