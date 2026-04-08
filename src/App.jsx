@@ -1,4 +1,5 @@
 import { useState } from "react";
+import SeguimientoProyectos from "./Proyectos";
 
 const phases = [
   {
@@ -447,6 +448,7 @@ export default function RoadmapApp() {
   const [hoveredTaskIndex, setHoveredTaskIndex] = useState(null);
   const [hoveredHireIndex, setHoveredHireIndex] = useState(null);
   const [expandedHierarchyNode, setExpandedHierarchyNode] = useState(null);
+  const [expandedProyectos, setExpandedProyectos] = useState(false);
   const toggleHierarchyNode = (idx) => {
     setExpandedHierarchyNode(expandedHierarchyNode === idx ? null : idx);
   };
@@ -527,6 +529,40 @@ export default function RoadmapApp() {
             <span style={{ fontSize: 18 }}>🚀</span>
             TO-BE (Propuesta)
           </button>
+
+          <button onClick={() => setExpandedProyectos(!expandedProyectos)} style={{
+            display: "flex", alignItems: "center", justifyContent: "space-between", padding: "12px 16px", borderRadius: 10,
+            background: (globalPage === "desarrollo" || globalPage === "infraestructura") ? "rgba(255, 255, 255, 0.05)" : "transparent",
+            color: (globalPage === "desarrollo" || globalPage === "infraestructura") ? "#ffffff" : "#a0a8bc",
+            border: "none", cursor: "pointer", transition: "all 0.2s", textAlign: "left", fontWeight: (globalPage === "desarrollo" || globalPage === "infraestructura") ? 700 : 500
+          }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+              <span style={{ fontSize: 18 }}>📂</span>
+              Proyectos
+            </div>
+            <span style={{ fontSize: 12, transform: expandedProyectos ? "rotate(180deg)" : "rotate(0deg)", transition: "transform 0.2s" }}>▼</span>
+          </button>
+          
+          {expandedProyectos && (
+            <div style={{ display: "flex", flexDirection: "column", gap: 4, paddingLeft: 42, marginTop: -4 }}>
+              <button onClick={() => setGlobalPage("desarrollo")} style={{
+                padding: "8px 12px", borderRadius: 8, textAlign: "left",
+                background: globalPage === "desarrollo" ? "rgba(91, 192, 190, 0.1)" : "transparent",
+                color: globalPage === "desarrollo" ? "#5BC0BE" : "#a0a8bc",
+                border: "none", cursor: "pointer", transition: "all 0.2s", fontSize: 13, fontWeight: globalPage === "desarrollo" ? 600 : 400
+              }}>
+                Desarrollo
+              </button>
+              <button onClick={() => setGlobalPage("infraestructura")} style={{
+                padding: "8px 12px", borderRadius: 8, textAlign: "left",
+                background: globalPage === "infraestructura" ? "rgba(240, 165, 0, 0.1)" : "transparent",
+                color: globalPage === "infraestructura" ? "#F0A500" : "#a0a8bc",
+                border: "none", cursor: "pointer", transition: "all 0.2s", fontSize: 13, fontWeight: globalPage === "infraestructura" ? 600 : 400
+              }}>
+                Infraestructura
+              </button>
+            </div>
+          )}
         </div>
       </div>
 
@@ -1362,6 +1398,22 @@ export default function RoadmapApp() {
           </div>
         </div>
       )}
+          </div>
+        )}
+
+        {globalPage === "desarrollo" && (
+          <div style={{ animation: "fadeIn 0.4s" }}>
+            <SeguimientoProyectos />
+          </div>
+        )}
+
+        {globalPage === "infraestructura" && (
+          <div style={{ height: "100%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", animation: "fadeIn 0.4s" }}>
+            <div style={{ fontSize: 60, marginBottom: 20 }}>🚧</div>
+            <h2 style={{ fontSize: 32, fontWeight: 700, color: "#fff", marginBottom: 12 }}>Página en Mantenimiento</h2>
+            <p style={{ color: "#a0a8bc", fontSize: 16, maxWidth: 400, textAlign: "center" }}>
+              Esta sección de infraestructura está siendo construida. Vuelve pronto para ver el contenido.
+            </p>
           </div>
         )}
       </div>
