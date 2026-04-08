@@ -1408,12 +1408,11 @@ export default function RoadmapApp() {
         )}
 
         {globalPage === "infraestructura" && (
-          <div style={{ height: "100%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", animation: "fadeIn 0.4s" }}>
-            <div style={{ fontSize: 60, marginBottom: 20 }}>🚧</div>
-            <h2 style={{ fontSize: 32, fontWeight: 700, color: "#fff", marginBottom: 12 }}>Página en Mantenimiento</h2>
-            <p style={{ color: "#a0a8bc", fontSize: 16, maxWidth: 400, textAlign: "center" }}>
-              Esta sección de infraestructura está siendo construida. Vuelve pronto para ver el contenido.
-            </p>
+          <div style={{ padding: "80px 40px", maxWidth: 1200, margin: "0 auto", textAlign: "center", animation: "fadeIn 0.4s" }}>
+            <h2 style={{ fontSize: 32, fontWeight: 700, color: "#fff", marginBottom: 24 }}>Infraestructura Técnica</h2>
+            <div style={{ marginTop: 20 }}>
+              <img src="/proyectos_infra.png" alt="Arquitectura de Infraestructura" style={{ width: "100%", borderRadius: 16, border: "1px solid rgba(255,255,255,0.1)", boxShadow: "0 10px 40px rgba(0,0,0,0.5)" }} />
+            </div>
           </div>
         )}
       </div>
