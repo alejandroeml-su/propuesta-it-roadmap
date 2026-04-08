@@ -563,6 +563,27 @@ export default function RoadmapApp() {
               </button>
             </div>
           )}
+
+          <button onClick={() => setGlobalPage("funciones")} style={{
+            display: "flex", alignItems: "center", gap: 12, padding: "12px 16px", borderRadius: 10,
+            background: globalPage === "funciones" ? "rgba(42, 157, 143, 0.1)" : "transparent",
+            color: globalPage === "funciones" ? "#2A9D8F" : "#a0a8bc",
+            border: "none", cursor: "pointer", transition: "all 0.2s", textAlign: "left", fontWeight: globalPage === "funciones" ? 700 : 500,
+            marginTop: 4
+          }}>
+            <span style={{ fontSize: 18 }}>⚙️</span>
+            Funciones de Tecnología
+          </button>
+
+          <button onClick={() => setGlobalPage("procesos")} style={{
+            display: "flex", alignItems: "center", gap: 12, padding: "12px 16px", borderRadius: 10,
+            background: globalPage === "procesos" ? "rgba(233, 196, 106, 0.1)" : "transparent",
+            color: globalPage === "procesos" ? "#E9C46A" : "#a0a8bc",
+            border: "none", cursor: "pointer", transition: "all 0.2s", textAlign: "left", fontWeight: globalPage === "procesos" ? 700 : 500
+          }}>
+            <span style={{ fontSize: 18 }}>🔄</span>
+            Procesos IT
+          </button>
         </div>
       </div>
 
@@ -1412,6 +1433,31 @@ export default function RoadmapApp() {
             <h2 style={{ fontSize: 32, fontWeight: 700, color: "#fff", marginBottom: 24 }}>Infraestructura Técnica</h2>
             <div style={{ marginTop: 20 }}>
               <img src="/proyectos_infra.png" alt="Arquitectura de Infraestructura" style={{ width: "100%", borderRadius: 16, border: "1px solid rgba(255,255,255,0.1)", boxShadow: "0 10px 40px rgba(0,0,0,0.5)" }} />
+            </div>
+          </div>
+        )}
+
+        {globalPage === "funciones" && (
+          <div style={{ padding: "80px 40px", maxWidth: 1200, margin: "0 auto", textAlign: "center", animation: "fadeIn 0.4s" }}>
+            <h2 style={{ fontSize: 32, fontWeight: 700, color: "#fff", marginBottom: 24 }}>Funciones de Tecnología</h2>
+            <div style={{ marginTop: 20 }}>
+              <img src="/FuncionesIT.png" alt="Funciones de Tecnología" style={{ width: "100%", borderRadius: 16, border: "1px solid rgba(255,255,255,0.1)", boxShadow: "0 10px 40px rgba(0,0,0,0.5)" }} />
+            </div>
+          </div>
+        )}
+
+        {globalPage === "procesos" && (
+          <div style={{ padding: "40px", height: "100%", display: "flex", flexDirection: "column", animation: "fadeIn 0.4s" }}>
+            <div style={{ maxWidth: 1400, width: "100%", margin: "0 auto", flex: 1, display: "flex", flexDirection: "column" }}>
+              <h2 style={{ fontSize: 32, fontWeight: 700, color: "#fff", marginBottom: 24, textAlign: "center" }}>Procesos IT</h2>
+              <div style={{ flex: 1, background: "#fff", borderRadius: 16, overflow: "hidden", border: "1px solid rgba(255,255,255,0.1)", boxShadow: "0 10px 40px rgba(0,0,0,0.5)" }}>
+                <iframe 
+                  src="https://docs.google.com/spreadsheets/d/1ASMPrVludhie-LWZVs9UdyodbM6LD4RS/edit?usp=sharing&rm=minimal" 
+                  style={{ width: "100%", height: "100%", border: "none", minHeight: "800px" }}
+                  title="Procesos IT"
+                  allowFullScreen
+                ></iframe>
+              </div>
             </div>
           </div>
         )}
