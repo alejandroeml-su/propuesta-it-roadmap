@@ -1440,6 +1440,21 @@ export default function RoadmapApp() {
         {globalPage === "funciones" && (
           <div style={{ padding: "80px 40px", maxWidth: 1200, margin: "0 auto", textAlign: "center", animation: "fadeIn 0.4s" }}>
             <h2 style={{ fontSize: 32, fontWeight: 700, color: "#fff", marginBottom: 24 }}>Funciones de Tecnología</h2>
+            <div style={{ marginBottom: 30 }}>
+              <a 
+                href="https://app3.mindmup.com/map/?id=3ede0197-4c88-43e5-bdad-c54d545f5b63" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                style={{
+                  display: "inline-flex", alignItems: "center", gap: 8, padding: "12px 24px",
+                  background: "linear-gradient(90deg, #2A9D8F, #21867a)", color: "#fff",
+                  borderRadius: 8, textDecoration: "none", fontWeight: 700, fontSize: 16,
+                  boxShadow: "0 4px 14px rgba(42, 157, 143, 0.4)", transition: "all 0.2s"
+                }}
+              >
+                <span>🧠</span> Abrir Mapa Mental
+              </a>
+            </div>
             <div style={{ marginTop: 20 }}>
               <img src="/FuncionesIT.png" alt="Funciones de Tecnología" style={{ width: "100%", borderRadius: 16, border: "1px solid rgba(255,255,255,0.1)", boxShadow: "0 10px 40px rgba(0,0,0,0.5)" }} />
             </div>
