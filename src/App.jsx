@@ -449,6 +449,13 @@ export default function RoadmapApp() {
   const [hoveredHireIndex, setHoveredHireIndex] = useState(null);
   const [expandedHierarchyNode, setExpandedHierarchyNode] = useState(null);
   const [expandedProyectos, setExpandedProyectos] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  const handleNav = (page) => {
+    setGlobalPage(page);
+    setIsMobileMenuOpen(false);
+  };
+
   const toggleHierarchyNode = (idx) => {
     setExpandedHierarchyNode(expandedHierarchyNode === idx ? null : idx);
   };
@@ -471,17 +478,29 @@ export default function RoadmapApp() {
   const totalTasks = phases.reduce((sum, p) => sum + p.tracks.reduce((s, t) => s + t.tasks.length, 0), 0);
 
   return (
-    <div style={{ display: "flex", minHeight: "100vh", background: "#0b1120", color: "#e2e8f0", fontFamily: "system-ui, sans-serif" }}>
+    <div className="app-container">
       <style>{`
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 4px; }
         ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
       `}</style>
       
+      {/* Encabezado Móvil (Sólo visible en móviles) */}
+      <div className="mobile-header">
+        <h1 style={{ margin: 0, fontSize: 18, color: "#fff", letterSpacing: 0.5, fontWeight: 800 }}>Avante IT</h1>
+        <button className="hamburger-btn" onClick={() => setIsMobileMenuOpen(true)}>☰</button>
+      </div>
+
+      {/* Overlay Oscuro para Menú Móvil */}
+      <div 
+        className={`sidebar-overlay ${isMobileMenuOpen ? 'active' : ''}`} 
+        onClick={() => setIsMobileMenuOpen(false)}
+      ></div>
+
       {/* Sidebar Opciones */}
-      <div style={{ width: 250, borderRight: "1px solid rgba(255,255,255,0.05)", background: "#060913", display: "flex", flexDirection: "column", flexShrink: 0 }}>
+      <div className={`sidebar ${isMobileMenuOpen ? 'mobile-open' : ''}`}>
         <div style={{ padding: "30px 24px", borderBottom: "1px solid rgba(255,255,255,0.02)" }}>
           <h1 style={{ margin: 0, fontSize: 18, color: "#fff", letterSpacing: 0.5, fontWeight: 800 }}>Inversiones Avante</h1>
           <div style={{ fontSize: 11, color: "#a0a8bc", marginTop: 6, opacity: 0.8 }}>IT Strategic Planning</div>
@@ -490,7 +509,7 @@ export default function RoadmapApp() {
         <div style={{ padding: "24px 16px", display: "flex", flexDirection: "column", gap: 8, flex: 1 }}>
           <div style={{ fontSize: 10, fontWeight: 700, color: "#4a5270", marginBottom: 8, paddingLeft: 8, textTransform: "uppercase", letterSpacing: 1 }}>Vistas del Roadmap</div>
           
-          <button onClick={() => setGlobalPage("inicio")} style={{
+          <button onClick={() => handleNav("inicio")} style={{
             display: "flex", alignItems: "center", gap: 12, padding: "12px 16px", borderRadius: 10,
             background: globalPage === "inicio" ? "rgba(255, 255, 255, 0.08)" : "transparent",
             color: globalPage === "inicio" ? "#ffffff" : "#a0a8bc",
@@ -500,7 +519,7 @@ export default function RoadmapApp() {
             INICIO
           </button>
 
-          <button onClick={() => setGlobalPage("as-is")} style={{
+          <button onClick={() => handleNav("as-is")} style={{
             display: "flex", alignItems: "center", gap: 12, padding: "12px 16px", borderRadius: 10,
             background: globalPage === "as-is" ? "rgba(91, 192, 190, 0.1)" : "transparent",
             color: globalPage === "as-is" ? "#5BC0BE" : "#a0a8bc",
@@ -510,7 +529,7 @@ export default function RoadmapApp() {
             AS-IS
           </button>
 
-          <button onClick={() => setGlobalPage("gap")} style={{
+          <button onClick={() => handleNav("gap")} style={{
             display: "flex", alignItems: "center", gap: 12, padding: "12px 16px", borderRadius: 10,
             background: globalPage === "gap" ? "rgba(240, 165, 0, 0.1)" : "transparent",
             color: globalPage === "gap" ? "#F0A500" : "#a0a8bc",
@@ -520,7 +539,7 @@ export default function RoadmapApp() {
             GAP Análisis
           </button>
 
-          <button onClick={() => { setGlobalPage("to-be"); setViewMode("timeline"); }} style={{
+          <button onClick={() => { handleNav("to-be"); setViewMode("timeline"); }} style={{
             display: "flex", alignItems: "center", gap: 12, padding: "12px 16px", borderRadius: 10,
             background: globalPage === "to-be" ? "rgba(118, 120, 237, 0.1)" : "transparent",
             color: globalPage === "to-be" ? "#7678ED" : "#a0a8bc",
@@ -545,7 +564,7 @@ export default function RoadmapApp() {
           
           {expandedProyectos && (
             <div style={{ display: "flex", flexDirection: "column", gap: 4, paddingLeft: 42, marginTop: -4 }}>
-              <button onClick={() => setGlobalPage("desarrollo")} style={{
+              <button onClick={() => handleNav("desarrollo")} style={{
                 padding: "8px 12px", borderRadius: 8, textAlign: "left",
                 background: globalPage === "desarrollo" ? "rgba(91, 192, 190, 0.1)" : "transparent",
                 color: globalPage === "desarrollo" ? "#5BC0BE" : "#a0a8bc",
@@ -553,7 +572,7 @@ export default function RoadmapApp() {
               }}>
                 Desarrollo
               </button>
-              <button onClick={() => setGlobalPage("infraestructura")} style={{
+              <button onClick={() => handleNav("infraestructura")} style={{
                 padding: "8px 12px", borderRadius: 8, textAlign: "left",
                 background: globalPage === "infraestructura" ? "rgba(240, 165, 0, 0.1)" : "transparent",
                 color: globalPage === "infraestructura" ? "#F0A500" : "#a0a8bc",
@@ -564,7 +583,7 @@ export default function RoadmapApp() {
             </div>
           )}
 
-          <button onClick={() => setGlobalPage("funciones")} style={{
+          <button onClick={() => handleNav("funciones")} style={{
             display: "flex", alignItems: "center", gap: 12, padding: "12px 16px", borderRadius: 10,
             background: globalPage === "funciones" ? "rgba(42, 157, 143, 0.1)" : "transparent",
             color: globalPage === "funciones" ? "#2A9D8F" : "#a0a8bc",
@@ -575,7 +594,7 @@ export default function RoadmapApp() {
             Funciones de Tecnología
           </button>
 
-          <button onClick={() => setGlobalPage("procesos")} style={{
+          <button onClick={() => handleNav("procesos")} style={{
             display: "flex", alignItems: "center", gap: 12, padding: "12px 16px", borderRadius: 10,
             background: globalPage === "procesos" ? "rgba(233, 196, 106, 0.1)" : "transparent",
             color: globalPage === "procesos" ? "#E9C46A" : "#a0a8bc",
@@ -588,19 +607,19 @@ export default function RoadmapApp() {
       </div>
 
       {/* Main Content Area */}
-      <div style={{ flex: 1, height: "100vh", overflowY: "auto", position: "relative", background: "linear-gradient(160deg, #070b14 0%, #0f1729 40%, #131b2e 100%)" }}>
+      <div className="main-content">
         
         {/* VISTAS EN CONSTRUCCIÓN */}
         {globalPage === "inicio" && (
-          <div style={{ height: "100%", paddingBottom: 60, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", animation: "fadeIn 0.8s cubic-bezier(0.1, 0.9, 0.2, 1)" }}>
-            <h1 style={{
+          <div style={{ height: "100%", padding: "20px", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", animation: "fadeIn 0.8s cubic-bezier(0.1, 0.9, 0.2, 1)" }}>
+            <h1 className="hero-title" style={{
               fontSize: 54, fontWeight: 800, margin: "0 0 16px 0",
               background: "linear-gradient(90deg, #5BC0BE, #7678ED, #F0A500)",
               WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", lineHeight: 1.2, textAlign: "center"
             }}>
               Tecnología y Transformación Digital
             </h1>
-            <h2 style={{ fontSize: 28, fontWeight: 500, color: "#ccd0da", margin: "0 0 16px 0", letterSpacing: 1.5 }}>
+            <h2 className="hero-subtitle" style={{ fontSize: 28, fontWeight: 500, color: "#ccd0da", margin: "0 0 16px 0", letterSpacing: 1.5, textAlign: "center" }}>
               Análisis y Estructuración
             </h2>
             <div style={{ fontSize: 16, color: "#6a7490", fontWeight: 700, letterSpacing: 4, textTransform: "uppercase" }}>
@@ -610,12 +629,12 @@ export default function RoadmapApp() {
         )}
 
         {globalPage === "as-is" && (
-          <div style={{ padding: "80px 40px", maxWidth: 1200, margin: "0 auto", textAlign: "center", animation: "fadeIn 0.4s" }}>
+          <div style={{ padding: "40px 20px", maxWidth: 1200, margin: "0 auto", textAlign: "center", animation: "fadeIn 0.4s" }}>
             <div style={{ fontSize: 70, marginBottom: 20 }}>🔍</div>
             <h2 style={{ fontSize: 32, color: "#fff", marginBottom: 12 }}>Situación Actual (AS-IS)</h2>
             <p style={{ color: "#a0a8bc", fontSize: 16, lineHeight: 1.6 }}>Esta sección documenta la arquitectura técnica, los flujos operativos actuales de negocio y el estado organizativo base previo a la intervención. Identifica qué tenemos actualmente y cómo funciona hoy sin ninguna de las reestructuraciones técnicas planificadas.</p>
-            <div style={{ marginTop: 40 }}>
-              <img src="/AS-IS.png" style={{ width: "100%", borderRadius: 16, border: "1px solid rgba(255,255,255,0.1)", boxShadow: "0 10px 40px rgba(0,0,0,0.5)" }} alt="Arquitectura AS-IS" />
+            <div className="scrollable-container" style={{ marginTop: 40, width: "100%", overflowX: "auto" }}>
+              <img src="/AS-IS.png" style={{ minWidth: 600, width: "100%", borderRadius: 16, border: "1px solid rgba(255,255,255,0.1)", boxShadow: "0 10px 40px rgba(0,0,0,0.5)" }} alt="Arquitectura AS-IS" />
             </div>
           </div>
         )}
@@ -1154,8 +1173,8 @@ export default function RoadmapApp() {
               <h2 style={{ fontSize: 18, color: "#7678ED", marginBottom: 4 }}>Cronograma de Ejecución por Área (Gantt)</h2>
               <p style={{ fontSize: 12, color: "#6a7490", margin: 0 }}>Desliza sobre los bloques para identificar actividades o haz clic para seleccionarlas</p>
             </div>
-
-            <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 30 }}>
+            <div className="scrollable-container">
+              <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 30, minWidth: 700 }}>
               {[
                 { name: "Operaciones e Infraestructura", color: "#0F4C5C", accent: "#5BC0BE" },
                 { name: "Sistemas Core Empresariales", color: "#1B3A4B", accent: "#F0A500" },
@@ -1224,6 +1243,7 @@ export default function RoadmapApp() {
                     </div>
                   );
                 })}
+              </div>
               </div>
             </div>
 
