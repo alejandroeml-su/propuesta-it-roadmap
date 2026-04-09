@@ -98,8 +98,8 @@ const EditableCell = ({ value, onChange, placeholder, accentColor }) => {
           width: "100%", minHeight: 48, padding: 6,
           border: `2px solid ${accentColor || "#3B82F6"}`,
           borderRadius: 5, fontFamily: "inherit", fontSize: 12, resize: "vertical",
-          outline: "none", background: accentColor === "#EF4444" ? "#FEF2F2" : "#EFF6FF",
-          color: "#1E293B", lineHeight: 1.4, boxSizing: "border-box",
+          outline: "none", background: accentColor === "#EF4444" ? "#FEF2F2" : "var(--input-bg)",
+          color: "var(--text-main)", lineHeight: 1.4, boxSizing: "border-box",
           textTransform: "uppercase",
         }}
       />
@@ -110,10 +110,10 @@ const EditableCell = ({ value, onChange, placeholder, accentColor }) => {
       onClick={() => setEditing(true)}
       style={{
         minHeight: 30, padding: "5px 7px", borderRadius: 5, cursor: "pointer",
-        border: `1.5px dashed ${value ? (accentColor === "#EF4444" ? "#FECACA" : "#CBD5E1") : "#CBD5E1"}`,
-        color: value ? (accentColor === "#EF4444" ? "#991B1B" : "#334155") : "#94A3B8",
+        border: `1.5px dashed ${value ? (accentColor === "#EF4444" ? "#FECACA" : "var(--table-text-head)") : "var(--table-text-head)"}`,
+        color: value ? (accentColor === "#EF4444" ? "#991B1B" : "var(--text-secondary)") : "var(--text-subtlest)",
         fontSize: 12, lineHeight: 1.4,
-        background: value ? (accentColor === "#EF4444" ? "#FEF2F2" : "#F8FAFC") : "transparent",
+        background: value ? (accentColor === "#EF4444" ? "#FEF2F2" : "var(--table-bg-light)") : "transparent",
         fontWeight: value && accentColor === "#EF4444" ? 600 : 400,
         textTransform: "uppercase",
       }}
@@ -137,28 +137,28 @@ export default function SeguimientoProyectos() {
 
   const thStyle = {
     padding: "10px 12px", textAlign: "left", fontSize: 11, fontWeight: 700,
-    textTransform: "uppercase", letterSpacing: "0.06em", color: "#CBD5E1",
+    textTransform: "uppercase", letterSpacing: "0.06em", color: "var(--table-text-head)",
     borderBottom: "2px solid #1E293B", whiteSpace: "nowrap",
   };
 
   const tdBase = {
-    padding: "10px 12px", fontSize: 12, color: "#334155",
+    padding: "10px 12px", fontSize: 12, color: "var(--text-secondary)",
     verticalAlign: "top", textTransform: "uppercase",
   };
 
   return (
-    <div style={{ fontFamily: "'DM Sans', sans-serif", background: "#F1F5F9", minHeight: "100vh", padding: "20px 12px" }}>
+    <div style={{ fontFamily: "'DM Sans', sans-serif", background: "var(--bg-main)", minHeight: "100vh", padding: "20px 12px" }}>
       <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet" />
 
       {/* Header */}
       <div style={{ maxWidth: 1400, margin: "0 auto 16px", display: "flex", flexWrap: "wrap", alignItems: "flex-end", justifyContent: "space-between", gap: 10 }}>
         <div>
-          <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: 24, fontWeight: 700, color: "#0F172A", margin: 0, textTransform: "uppercase" }}>
+          <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: 24, fontWeight: 700, color: "var(--table-bg-dark)", margin: 0, textTransform: "uppercase" }}>
             SEGUIMIENTO DE PROYECTOS
           </h1>
-          <p style={{ color: "#64748B", fontSize: 13, margin: "3px 0 0", textTransform: "uppercase" }}>AVANTE — 08 DE ABRIL DE 2026</p>
+          <p style={{ color: "var(--text-muted)", fontSize: 13, margin: "3px 0 0", textTransform: "uppercase" }}>AVANTE — 08 DE ABRIL DE 2026</p>
         </div>
-        <div style={{ display: "flex", gap: 14, fontSize: 11, color: "#64748B", textTransform: "uppercase" }}>
+        <div style={{ display: "flex", gap: 14, fontSize: 11, color: "var(--text-muted)", textTransform: "uppercase" }}>
           {[
             { label: "PENDIENTE", color: "#EF4444" },
             { label: "EN PROCESO", color: "#F59E0B" },
@@ -174,13 +174,13 @@ export default function SeguimientoProyectos() {
 
       {/* Table */}
       <div style={{
-        maxWidth: 1400, margin: "0 auto", background: "#FFFFFF", borderRadius: 10,
-        boxShadow: "0 1px 3px rgba(0,0,0,.06), 0 4px 14px rgba(0,0,0,.04)",
+        maxWidth: 1400, margin: "0 auto", background: "var(--text-main)FFF", borderRadius: 10,
+        boxShadow: "var(--shadow-main)",
         overflowX: "auto",
       }}>
         <table style={{ width: "100%", borderCollapse: "collapse", minWidth: 1050 }}>
           <thead>
-            <tr style={{ background: "#0F172A" }}>
+            <tr style={{ background: "var(--table-bg-dark)" }}>
               <th style={{ ...thStyle, width: 36, textAlign: "center" }}>#</th>
               <th style={{ ...thStyle, width: 150 }}>PROYECTO</th>
               <th style={{ ...thStyle, width: 130 }}>ESTADO PROYECTO</th>
@@ -197,9 +197,9 @@ export default function SeguimientoProyectos() {
               proj.subproyectos.map((sub, si) => {
                 const isFirst = si === 0;
                 const isLast = si === proj.subproyectos.length - 1;
-                const stripeBg = pi % 2 === 0 ? "#FFFFFF" : "#FAFBFD";
-                const rowBorder = isLast ? "2.5px solid #E2E8F0" : "1px solid #F1F5F9";
-                const groupBorder = "2.5px solid #E2E8F0";
+                const stripeBg = pi % 2 === 0 ? "var(--text-main)FFF" : "var(--table-bg-alt)";
+                const rowBorder = isLast ? "2.5px solid var(--text-secondary)" : "1px solid var(--border-table-light)";
+                const groupBorder = "2.5px solid var(--text-secondary)";
 
                 return (
                   <tr key={sub.id} style={{ background: stripeBg }}>
@@ -208,9 +208,9 @@ export default function SeguimientoProyectos() {
                         rowSpan={proj.subproyectos.length}
                         style={{
                           ...tdBase, borderBottom: groupBorder,
-                          fontWeight: 700, color: "#94A3B8", textAlign: "center",
+                          fontWeight: 700, color: "var(--text-subtlest)", textAlign: "center",
                           verticalAlign: "middle", background: stripeBg,
-                          borderRight: "1px solid #F1F5F9",
+                          borderRight: "1px solid var(--border-table-light)",
                         }}
                       >
                         {proj.id}
@@ -222,9 +222,9 @@ export default function SeguimientoProyectos() {
                         rowSpan={proj.subproyectos.length}
                         style={{
                           ...tdBase, borderBottom: groupBorder,
-                          fontWeight: 700, color: "#0F172A", fontSize: 13,
+                          fontWeight: 700, color: "var(--table-bg-dark)", fontSize: 13,
                           verticalAlign: "middle", lineHeight: 1.4,
-                          background: stripeBg, borderRight: "1px solid #F1F5F9",
+                          background: stripeBg, borderRight: "1px solid var(--border-table-light)",
                         }}
                       >
                         {proj.proyecto}
@@ -237,14 +237,14 @@ export default function SeguimientoProyectos() {
                         style={{
                           ...tdBase, borderBottom: groupBorder,
                           verticalAlign: "middle", textAlign: "center",
-                          background: stripeBg, borderRight: "1px solid #F1F5F9",
+                          background: stripeBg, borderRight: "1px solid var(--border-table-light)",
                         }}
                       >
                         <StatusBadge estado={proj.estadoGeneral} color={proj.estadoGeneralColor} />
                       </td>
                     )}
 
-                    <td style={{ ...tdBase, borderBottom: rowBorder, fontWeight: 600, color: "#1E293B" }}>
+                    <td style={{ ...tdBase, borderBottom: rowBorder, fontWeight: 600, color: "var(--text-main)" }}>
                       {sub.nombre}
                     </td>
 
@@ -287,7 +287,7 @@ export default function SeguimientoProyectos() {
         </table>
       </div>
 
-      <p style={{ maxWidth: 1400, margin: "10px auto 0", fontSize: 11, color: "#94A3B8", textAlign: "center", textTransform: "uppercase" }}>
+      <p style={{ maxWidth: 1400, margin: "10px auto 0", fontSize: 11, color: "var(--text-subtlest)", textAlign: "center", textTransform: "uppercase" }}>
         HAZ CLIC EN LAS COLUMNAS DE IMPACTO O COMENTARIOS PARA AGREGAR NOTAS A CADA SUBPROYECTO.
       </p>
     </div>

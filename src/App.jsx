@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import SeguimientoProyectos from "./Proyectos";
 
 const phases = [
@@ -450,6 +450,18 @@ export default function RoadmapApp() {
   const [expandedHierarchyNode, setExpandedHierarchyNode] = useState(null);
   const [expandedProyectos, setExpandedProyectos] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [theme, setTheme] = useState(() => {
+    return localStorage.getItem("theme") || "dark";
+  });
+
+  useEffect(() => {
+    if (theme === "dark") {
+      document.body.classList.add("dark");
+    } else {
+      document.body.classList.remove("dark");
+    }
+    localStorage.setItem("theme", theme);
+  }, [theme]);
 
   const handleNav = (page) => {
     setGlobalPage(page);
@@ -489,7 +501,7 @@ export default function RoadmapApp() {
       
       {/* Encabezado Móvil (Sólo visible en móviles) */}
       <div className="mobile-header">
-        <h1 style={{ margin: 0, fontSize: 18, color: "#fff", letterSpacing: 0.5, fontWeight: 800 }}>Avante IT</h1>
+        <h1 style={{ margin: 0, fontSize: 18, color: "var(--text-main)", letterSpacing: 0.5, fontWeight: 800 }}>Avante IT</h1>
         <button className="hamburger-btn" onClick={() => setIsMobileMenuOpen(true)}>☰</button>
       </div>
 
@@ -499,20 +511,56 @@ export default function RoadmapApp() {
         onClick={() => setIsMobileMenuOpen(false)}
       ></div>
 
+      {/* Floating Theme Toggle */}
+      <button 
+        onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+        style={{
+          position: "fixed",
+          bottom: "24px",
+          right: "24px",
+          zIndex: 9999,
+          width: "52px",
+          height: "52px",
+          borderRadius: "50%",
+          background: "var(--glass-bg)",
+          border: "1px solid var(--border-med)",
+          backdropFilter: "blur(12px)",
+          color: "var(--text-main)",
+          fontSize: "22px",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          cursor: "pointer",
+          boxShadow: "var(--shadow-main)",
+          transition: "all 0.3s ease",
+        }}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.transform = "scale(1.1) rotate(5deg)";
+          e.currentTarget.style.background = "var(--glass-bg-hover)";
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.transform = "scale(1) rotate(0deg)";
+          e.currentTarget.style.background = "var(--glass-bg)";
+        }}
+        title={theme === "dark" ? "Cambiar a Modo Claro" : "Cambiar a Modo Oscuro"}
+      >
+        {theme === "dark" ? "🌞" : "🌙"}
+      </button>
+
       {/* Sidebar Opciones */}
       <div className={`sidebar ${isMobileMenuOpen ? 'mobile-open' : ''}`}>
         <div style={{ padding: "30px 24px", borderBottom: "1px solid rgba(255,255,255,0.02)" }}>
-          <h1 style={{ margin: 0, fontSize: 18, color: "#fff", letterSpacing: 0.5, fontWeight: 800 }}>Inversiones Avante</h1>
-          <div style={{ fontSize: 11, color: "#a0a8bc", marginTop: 6, opacity: 0.8 }}>IT Strategic Planning</div>
+          <h1 style={{ margin: 0, fontSize: 18, color: "var(--text-main)", letterSpacing: 0.5, fontWeight: 800 }}>Inversiones Avante</h1>
+          <div style={{ fontSize: 11, color: "var(--text-muted)", marginTop: 6, opacity: 0.8 }}>IT Strategic Planning</div>
         </div>
         
         <div style={{ padding: "24px 16px", display: "flex", flexDirection: "column", gap: 8, flex: 1 }}>
-          <div style={{ fontSize: 10, fontWeight: 700, color: "#4a5270", marginBottom: 8, paddingLeft: 8, textTransform: "uppercase", letterSpacing: 1 }}>Vistas del Roadmap</div>
+          <div style={{ fontSize: 10, fontWeight: 700, color: "var(--text-nav)", marginBottom: 8, paddingLeft: 8, textTransform: "uppercase", letterSpacing: 1 }}>Vistas del Roadmap</div>
           
           <button onClick={() => handleNav("inicio")} style={{
             display: "flex", alignItems: "center", gap: 12, padding: "12px 16px", borderRadius: 10,
-            background: globalPage === "inicio" ? "rgba(255, 255, 255, 0.08)" : "transparent",
-            color: globalPage === "inicio" ? "#ffffff" : "#a0a8bc",
+            background: globalPage === "inicio" ? "var(--btn-nav-active)" : "transparent",
+            color: globalPage === "inicio" ? "var(--text-main)fff" : "var(--text-muted)",
             border: "none", cursor: "pointer", transition: "all 0.2s", textAlign: "left", fontWeight: globalPage === "inicio" ? 700 : 500
           }}>
             <span style={{ fontSize: 18 }}>🏠</span>
@@ -522,7 +570,7 @@ export default function RoadmapApp() {
           <button onClick={() => handleNav("as-is")} style={{
             display: "flex", alignItems: "center", gap: 12, padding: "12px 16px", borderRadius: 10,
             background: globalPage === "as-is" ? "rgba(91, 192, 190, 0.1)" : "transparent",
-            color: globalPage === "as-is" ? "#5BC0BE" : "#a0a8bc",
+            color: globalPage === "as-is" ? "#5BC0BE" : "var(--text-muted)",
             border: "none", cursor: "pointer", transition: "all 0.2s", textAlign: "left", fontWeight: globalPage === "as-is" ? 700 : 500
           }}>
             <span style={{ fontSize: 18 }}>🔍</span>
@@ -532,7 +580,7 @@ export default function RoadmapApp() {
           <button onClick={() => handleNav("gap")} style={{
             display: "flex", alignItems: "center", gap: 12, padding: "12px 16px", borderRadius: 10,
             background: globalPage === "gap" ? "rgba(240, 165, 0, 0.1)" : "transparent",
-            color: globalPage === "gap" ? "#F0A500" : "#a0a8bc",
+            color: globalPage === "gap" ? "#F0A500" : "var(--text-muted)",
             border: "none", cursor: "pointer", transition: "all 0.2s", textAlign: "left", fontWeight: globalPage === "gap" ? 700 : 500
           }}>
             <span style={{ fontSize: 18 }}>🌉</span>
@@ -542,7 +590,7 @@ export default function RoadmapApp() {
           <button onClick={() => { handleNav("to-be"); setViewMode("timeline"); }} style={{
             display: "flex", alignItems: "center", gap: 12, padding: "12px 16px", borderRadius: 10,
             background: globalPage === "to-be" ? "rgba(118, 120, 237, 0.1)" : "transparent",
-            color: globalPage === "to-be" ? "#7678ED" : "#a0a8bc",
+            color: globalPage === "to-be" ? "#7678ED" : "var(--text-muted)",
             border: "none", cursor: "pointer", transition: "all 0.2s", textAlign: "left", fontWeight: globalPage === "to-be" ? 700 : 500
           }}>
             <span style={{ fontSize: 18 }}>🚀</span>
@@ -551,8 +599,8 @@ export default function RoadmapApp() {
 
           <button onClick={() => setExpandedProyectos(!expandedProyectos)} style={{
             display: "flex", alignItems: "center", justifyContent: "space-between", padding: "12px 16px", borderRadius: 10,
-            background: (globalPage === "desarrollo" || globalPage === "infraestructura") ? "rgba(255, 255, 255, 0.05)" : "transparent",
-            color: (globalPage === "desarrollo" || globalPage === "infraestructura") ? "#ffffff" : "#a0a8bc",
+            background: (globalPage === "desarrollo" || globalPage === "infraestructura") ? "var(--border-light)" : "transparent",
+            color: (globalPage === "desarrollo" || globalPage === "infraestructura") ? "var(--text-main)fff" : "var(--text-muted)",
             border: "none", cursor: "pointer", transition: "all 0.2s", textAlign: "left", fontWeight: (globalPage === "desarrollo" || globalPage === "infraestructura") ? 700 : 500
           }}>
             <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
@@ -567,7 +615,7 @@ export default function RoadmapApp() {
               <button onClick={() => handleNav("desarrollo")} style={{
                 padding: "8px 12px", borderRadius: 8, textAlign: "left",
                 background: globalPage === "desarrollo" ? "rgba(91, 192, 190, 0.1)" : "transparent",
-                color: globalPage === "desarrollo" ? "#5BC0BE" : "#a0a8bc",
+                color: globalPage === "desarrollo" ? "#5BC0BE" : "var(--text-muted)",
                 border: "none", cursor: "pointer", transition: "all 0.2s", fontSize: 13, fontWeight: globalPage === "desarrollo" ? 600 : 400
               }}>
                 Desarrollo
@@ -575,7 +623,7 @@ export default function RoadmapApp() {
               <button onClick={() => handleNav("infraestructura")} style={{
                 padding: "8px 12px", borderRadius: 8, textAlign: "left",
                 background: globalPage === "infraestructura" ? "rgba(240, 165, 0, 0.1)" : "transparent",
-                color: globalPage === "infraestructura" ? "#F0A500" : "#a0a8bc",
+                color: globalPage === "infraestructura" ? "#F0A500" : "var(--text-muted)",
                 border: "none", cursor: "pointer", transition: "all 0.2s", fontSize: 13, fontWeight: globalPage === "infraestructura" ? 600 : 400
               }}>
                 Infraestructura
@@ -586,7 +634,7 @@ export default function RoadmapApp() {
           <button onClick={() => handleNav("funciones")} style={{
             display: "flex", alignItems: "center", gap: 12, padding: "12px 16px", borderRadius: 10,
             background: globalPage === "funciones" ? "rgba(42, 157, 143, 0.1)" : "transparent",
-            color: globalPage === "funciones" ? "#2A9D8F" : "#a0a8bc",
+            color: globalPage === "funciones" ? "#2A9D8F" : "var(--text-muted)",
             border: "none", cursor: "pointer", transition: "all 0.2s", textAlign: "left", fontWeight: globalPage === "funciones" ? 700 : 500,
             marginTop: 4
           }}>
@@ -597,7 +645,7 @@ export default function RoadmapApp() {
           <button onClick={() => handleNav("procesos")} style={{
             display: "flex", alignItems: "center", gap: 12, padding: "12px 16px", borderRadius: 10,
             background: globalPage === "procesos" ? "rgba(233, 196, 106, 0.1)" : "transparent",
-            color: globalPage === "procesos" ? "#E9C46A" : "#a0a8bc",
+            color: globalPage === "procesos" ? "#E9C46A" : "var(--text-muted)",
             border: "none", cursor: "pointer", transition: "all 0.2s", textAlign: "left", fontWeight: globalPage === "procesos" ? 700 : 500
           }}>
             <span style={{ fontSize: 18 }}>🔄</span>
@@ -619,10 +667,10 @@ export default function RoadmapApp() {
             }}>
               Tecnología y Transformación Digital
             </h1>
-            <h2 className="hero-subtitle" style={{ fontSize: 28, fontWeight: 500, color: "#ccd0da", margin: "0 0 16px 0", letterSpacing: 1.5, textAlign: "center" }}>
+            <h2 className="hero-subtitle" style={{ fontSize: 28, fontWeight: 500, color: "var(--text-muted)", margin: "0 0 16px 0", letterSpacing: 1.5, textAlign: "center" }}>
               Análisis y Estructuración
             </h2>
-            <div style={{ fontSize: 16, color: "#6a7490", fontWeight: 700, letterSpacing: 4, textTransform: "uppercase" }}>
+            <div style={{ fontSize: 16, color: "var(--text-subtlest)", fontWeight: 700, letterSpacing: 4, textTransform: "uppercase" }}>
               Abril 2026
             </div>
           </div>
@@ -631,8 +679,8 @@ export default function RoadmapApp() {
         {globalPage === "as-is" && (
           <div style={{ padding: "40px 20px", maxWidth: 1200, margin: "0 auto", textAlign: "center", animation: "fadeIn 0.4s" }}>
             <div style={{ fontSize: 70, marginBottom: 20 }}>🔍</div>
-            <h2 style={{ fontSize: 32, color: "#fff", marginBottom: 12 }}>Situación Actual (AS-IS)</h2>
-            <p style={{ color: "#a0a8bc", fontSize: 16, lineHeight: 1.6 }}>Esta sección documenta la arquitectura técnica, los flujos operativos actuales de negocio y el estado organizativo base previo a la intervención. Identifica qué tenemos actualmente y cómo funciona hoy sin ninguna de las reestructuraciones técnicas planificadas.</p>
+            <h2 style={{ fontSize: 32, color: "var(--text-main)", marginBottom: 12 }}>Situación Actual (AS-IS)</h2>
+            <p style={{ color: "var(--text-muted)", fontSize: 16, lineHeight: 1.6 }}>Esta sección documenta la arquitectura técnica, los flujos operativos actuales de negocio y el estado organizativo base previo a la intervención. Identifica qué tenemos actualmente y cómo funciona hoy sin ninguna de las reestructuraciones técnicas planificadas.</p>
             <div className="scrollable-container" style={{ marginTop: 40, width: "100%", overflowX: "auto" }}>
               <img src="/AS-IS.png" style={{ minWidth: 600, width: "100%", borderRadius: 16, border: "1px solid rgba(255,255,255,0.1)", boxShadow: "0 10px 40px rgba(0,0,0,0.5)" }} alt="Arquitectura AS-IS" />
             </div>
@@ -642,26 +690,26 @@ export default function RoadmapApp() {
         {globalPage === "gap" && (
           <div style={{ padding: "80px 40px", maxWidth: 900, margin: "0 auto", textAlign: "center", animation: "fadeIn 0.4s" }}>
             <div style={{ fontSize: 70, marginBottom: 20 }}>🌉</div>
-            <h2 style={{ fontSize: 32, color: "#fff", marginBottom: 12 }}>GAP Análisis (Brechas)</h2>
-            <p style={{ color: "#a0a8bc", fontSize: 16, lineHeight: 1.6 }}>Diagnóstico puntual de deficiencias, cuellos de botella tecnológicos, brechas funcionales de Odoo y riesgos críticos identificados al comparar el AS-IS que tenemos versus el TO-BE que exige un modelo digitalmente maduro, seguro y operacional.</p>
+            <h2 style={{ fontSize: 32, color: "var(--text-main)", marginBottom: 12 }}>GAP Análisis (Brechas)</h2>
+            <p style={{ color: "var(--text-muted)", fontSize: 16, lineHeight: 1.6 }}>Diagnóstico puntual de deficiencias, cuellos de botella tecnológicos, brechas funcionales de Odoo y riesgos críticos identificados al comparar el AS-IS que tenemos versus el TO-BE que exige un modelo digitalmente maduro, seguro y operacional.</p>
             
-            <div style={{ textAlign: "left", background: "rgba(255,255,255,0.02)", padding: "30px 40px", borderRadius: 16, border: "1px solid rgba(255,255,255,0.05)", marginTop: 40 }}>
+            <div style={{ textAlign: "left", background: "var(--glass-bg)", padding: "30px 40px", borderRadius: 16, border: "1px solid rgba(255,255,255,0.05)", marginTop: 40 }}>
               <h3 style={{ color: "#F0A500", marginTop: 0, fontSize: 20 }}>Análisis de Brechas (Gap Analysis): Gestión de Servicios e Infraestructura TI</h3>
-              <div style={{ color: "#a0a8bc", fontSize: 14, marginBottom: 20 }}>
+              <div style={{ color: "var(--text-muted)", fontSize: 14, marginBottom: 20 }}>
                 <p><strong>Preparado por:</strong> Jefatura de Tecnología y Transformación Digital | <strong>Organización:</strong> Inversiones Avante</p>
                 <p style={{ lineHeight: 1.6 }}>He finalizado la revisión del estado actual de nuestras operaciones tecnológicas basándome en la matriz de responsabilidades e implementaciones. Tras contrastar nuestra realidad operativa frente a los marcos de trabajo de ITIL 4 y COBIT 2019, he identificado deficiencias críticas y riesgos inminentes para Inversiones Avante derivados de la tercerización casi total con el proveedor IPCOM.</p>
                 <p style={{ lineHeight: 1.6 }}>El hallazgo más alarmante es que no existe un contrato formal firmado que regule esta relación comercial. Operar sin Acuerdos de Nivel de Servicio (SLA), sin Acuerdos de Confidencialidad (NDA), y sin cláusulas de Propiedad Intelectual o salvaguarda de activos intangibles y tangibles, nos deja en una posición de vulnerabilidad extrema.</p>
               </div>
 
-              <h4 style={{ color: "#fff", borderBottom: "1px solid #333", paddingBottom: 8, fontSize: 16 }}>Hallazgos Críticos Generales (Nivel Directivo)</h4>
-              <ul style={{ color: "#a0a8bc", fontSize: 14, lineHeight: 1.6, paddingLeft: 20 }}>
+              <h4 style={{ color: "var(--text-main)", borderBottom: "1px solid #333", paddingBottom: 8, fontSize: 16 }}>Hallazgos Críticos Generales (Nivel Directivo)</h4>
+              <ul style={{ color: "var(--text-muted)", fontSize: 14, lineHeight: 1.6, paddingLeft: 20 }}>
                 <li style={{ marginBottom: 6 }}><strong>Gestión de Incidentes Deficiente:</strong> Al no contar con SLAs definidos, la reacción ante caídas de sistemas críticos depende enteramente de la disponibilidad arbitraria del proveedor. Esto se traduce en tiempos de inactividad prolongados y pérdida de ingresos.</li>
                 <li style={{ marginBottom: 6 }}><strong>Sobrecostos Ocultos por Cambios:</strong> Sin un marco contractual que fije tarifas, el modelo de "cobro por evento" genera un sobrecosto insostenible.</li>
                 <li style={{ marginBottom: 6 }}><strong>Pérdida de Propiedad Intelectual (IP):</strong> Todo el desarrollo del código y BD del ERP/HIS pertenecen de facto a IPCOM al no existir un contrato de cesión.</li>
                 <li style={{ marginBottom: 6 }}><strong>Riesgo Legal y de Cumplimiento:</strong> La falta de un inventario lógico, sumado a la opacidad del proveedor, abre la puerta a la instalación de software no licenciado, exponiéndose a multas millonarias (violación MEA03).</li>
               </ul>
 
-              <h4 style={{ color: "#fff", borderBottom: "1px solid #333", paddingBottom: 8, marginTop: 30, fontSize: 16 }}>Análisis Detallado por Procesos</h4>
+              <h4 style={{ color: "var(--text-main)", borderBottom: "1px solid #333", paddingBottom: 8, marginTop: 30, fontSize: 16 }}>Análisis Detallado por Procesos</h4>
               <div style={{ overflowX: "auto" }}>
                 <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 12, textAlign: "left", marginTop: 10 }}>
                   <thead>
@@ -674,32 +722,32 @@ export default function RoadmapApp() {
                   </thead>
                   <tbody>
                     <tr style={{ borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
-                      <td style={{ padding: 12, color: "#fff", fontWeight: 700 }}>Desarrollo (ERP/HIS)<br/><span style={{fontSize:10, color:"#6a7490", fontWeight: 'normal'}}>Facturación, Inventario...</span></td>
-                      <td style={{ padding: 12, color: "#a0a8bc" }}>Cero control sobre el código y arquitectura. Dependencia.</td>
+                      <td style={{ padding: 12, color: "var(--text-main)", fontWeight: 700 }}>Desarrollo (ERP/HIS)<br/><span style={{fontSize:10, color:"var(--text-subtlest)", fontWeight: 'normal'}}>Facturación, Inventario...</span></td>
+                      <td style={{ padding: 12, color: "var(--text-muted)" }}>Cero control sobre el código y arquitectura. Dependencia.</td>
                       <td style={{ padding: 12, color: "#E63946" }}>Secuestro de datos (Vendor Lock-in). Costos altos.</td>
                       <td style={{ padding: 12, color: "#5BC0BE" }}>Exigir entregas de ramas de código. Firmar NDA e IP.</td>
                     </tr>
                     <tr style={{ borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
-                      <td style={{ padding: 12, color: "#fff", fontWeight: 700 }}>Web & Datos</td>
-                      <td style={{ padding: 12, color: "#a0a8bc" }}>Publicación e integridad en manos de terceros.</td>
+                      <td style={{ padding: 12, color: "var(--text-main)", fontWeight: 700 }}>Web & Datos</td>
+                      <td style={{ padding: 12, color: "var(--text-muted)" }}>Publicación e integridad en manos de terceros.</td>
                       <td style={{ padding: 12, color: "#E63946" }}>Fugas o alteración de datos sensibles.</td>
                       <td style={{ padding: 12, color: "#5BC0BE" }}>Reubicar administración y llaves a TI interno.</td>
                     </tr>
                     <tr style={{ borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
-                      <td style={{ padding: 12, color: "#fff", fontWeight: 700 }}>Infraestructura Core<br/><span style={{fontSize:10, color:"#6a7490", fontWeight: 'normal'}}>Redes, Cloud, Servidores</span></td>
-                      <td style={{ padding: 12, color: "#a0a8bc" }}>Sin mapa de red ni control del tenant Cloud.</td>
+                      <td style={{ padding: 12, color: "var(--text-main)", fontWeight: 700 }}>Infraestructura Core<br/><span style={{fontSize:10, color:"var(--text-subtlest)", fontWeight: 'normal'}}>Redes, Cloud, Servidores</span></td>
+                      <td style={{ padding: 12, color: "var(--text-muted)" }}>Sin mapa de red ni control del tenant Cloud.</td>
                       <td style={{ padding: 12, color: "#E63946" }}>Riesgo de apagado Cloud por disputa contractual.</td>
                       <td style={{ padding: 12, color: "#5BC0BE" }}>Recuperar credenciales root físicas y de AWS.</td>
                     </tr>
                     <tr style={{ borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
-                      <td style={{ padding: 12, color: "#fff", fontWeight: 700 }}>End User & Hardware</td>
-                      <td style={{ padding: 12, color: "#a0a8bc" }}>Sin inventario. Posible instalación pirata.</td>
+                      <td style={{ padding: 12, color: "var(--text-main)", fontWeight: 700 }}>End User & Hardware</td>
+                      <td style={{ padding: 12, color: "var(--text-muted)" }}>Sin inventario. Posible instalación pirata.</td>
                       <td style={{ padding: 12, color: "#E63946" }}>Riesgo de demandas por licenciamiento.</td>
                       <td style={{ padding: 12, color: "#5BC0BE" }}>Despliegue de RMM. Inventariar endpoints.</td>
                     </tr>
                     <tr>
-                      <td style={{ padding: 12, color: "#fff", fontWeight: 700 }}>CCTV / Seguridad</td>
-                      <td style={{ padding: 12, color: "#a0a8bc" }}>Grabaciones expuestas a externos.</td>
+                      <td style={{ padding: 12, color: "var(--text-main)", fontWeight: 700 }}>CCTV / Seguridad</td>
+                      <td style={{ padding: 12, color: "var(--text-muted)" }}>Grabaciones expuestas a externos.</td>
                       <td style={{ padding: 12, color: "#E63946" }}>Vulneración absoluta de privacidad física.</td>
                       <td style={{ padding: 12, color: "#5BC0BE" }}>Aislar VLAN. Retirar master keys a IPCOM.</td>
                     </tr>
@@ -709,7 +757,7 @@ export default function RoadmapApp() {
 
               <div style={{ marginTop: 30, background: "rgba(230, 57, 70, 0.1)", padding: 20, borderRadius: 12, borderLeft: "4px solid #E63946" }}>
                 <h4 style={{ color: "#E63946", marginTop: 0, marginBottom: 12, fontSize: 15 }}>Plan de Acción Inmediato (15 días)</h4>
-                <p style={{ color: "#ccd0da", fontSize: 13, lineHeight: 1.6, margin: 0 }}>
+                <p style={{ color: "var(--text-muted)", fontSize: 13, lineHeight: 1.6, margin: 0 }}>
                   <strong>1. Intervención Legal:</strong> Redactar y forzar firma de Acuerdo de Nivel de Servicio (SLA) transitorio y contrato de cesión de Propiedad Intelectual.<br/><br/>
                   <strong>2. Toma de Activos:</strong> Congelar compras hasta levantar hardware y erradicar cualquier aplicativo no licenciado.<br/><br/>
                   <strong>3. Credenciales:</strong> Exigir bajo notario la entrega documentada de credenciales root de AWS y firewalls (IPCOM pasa a tener roles limitados).
@@ -734,16 +782,16 @@ export default function RoadmapApp() {
         }}>
           Roadmap — Tecnología y Transformación Digital
         </h1>
-        <p style={{ fontSize: 12, color: "#6a7490", marginTop: 6, maxWidth: 550, margin: "6px auto 0" }}>
+        <p style={{ fontSize: 12, color: "var(--text-subtlest)", marginTop: 6, maxWidth: 550, margin: "6px auto 0" }}>
           ERP · HIS · AWS/EKS · Odoo 18 · Ciberseguridad · 3 Edificios · React/Next.js
         </p>
         <div style={{ display: "flex", gap: 6, justifyContent: "center", marginTop: 16, flexWrap: "wrap" }}>
           {[["timeline", "📅 Fases"], ["kpis", "📊 KPIs"], ["org", "👥 Estructura y Roles"], ["hierarchy", "🌳 Jerarquía"], ["interactive-timeline", "🛤️ Timeline (15 Abr)"]].map(([k, l]) => (
             <button key={k} onClick={() => { setViewMode(k); setExpandedCell(null); setExpandedRole(null); }} style={{
               padding: "6px 14px", borderRadius: 20,
-              border: viewMode === k ? "none" : "1px solid #252d40",
-              background: viewMode === k ? "linear-gradient(90deg, #5BC0BE, #7678ED)" : "rgba(255,255,255,0.03)",
-              color: viewMode === k ? "#070b14" : "#6a7490",
+              border: viewMode === k ? "none" : "1px solid var(--border-table)",
+              background: viewMode === k ? "linear-gradient(90deg, #5BC0BE, #7678ED)" : "var(--glass-bg-hover)",
+              color: viewMode === k ? "var(--bg-gradient-start)" : "var(--text-subtlest)",
               fontSize: 12, fontWeight: 600, cursor: "pointer", transition: "all 0.2s",
             }}>{l}</button>
           ))}
@@ -756,11 +804,11 @@ export default function RoadmapApp() {
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(155px, 1fr))", gap: 10 }}>
             {kpis.map((k, i) => (
               <div key={i} style={{
-                background: "rgba(255,255,255,0.03)", borderRadius: 12, padding: 14,
+                background: "var(--glass-bg-hover)", borderRadius: 12, padding: 14,
                 border: "1px solid rgba(255,255,255,0.06)", textAlign: "center",
               }}>
                 <div style={{ fontSize: 22, marginBottom: 6 }}>{k.icon}</div>
-                <div style={{ fontSize: 11, color: "#6a7490", marginBottom: 4 }}>{k.name}</div>
+                <div style={{ fontSize: 11, color: "var(--text-subtlest)", marginBottom: 4 }}>{k.name}</div>
                 <div style={{ fontSize: 18, fontWeight: 700, color: "#5BC0BE" }}>{k.target}</div>
               </div>
             ))}
@@ -778,9 +826,9 @@ export default function RoadmapApp() {
               <div style={{ fontSize: 14, fontWeight: 700 }}>Tecnología y Transformación Digital</div>
               <div style={{ fontSize: 10, opacity: 0.8 }}>Estrategia · Gobierno TI · PMO · Presupuesto · Alineación con Dirección</div>
             </div>
-            <div style={{ width: 2, height: 14, background: "#252d40", margin: "0 auto" }} />
+            <div style={{ width: 2, height: 14, background: "var(--border-table)", margin: "0 auto" }} />
           </div>
-          <div style={{ fontSize: 11, color: "#6a7490", textAlign: "center", marginBottom: 16, fontStyle: "italic" }}>
+          <div style={{ fontSize: 11, color: "var(--text-subtlest)", textAlign: "center", marginBottom: 16, fontStyle: "italic" }}>
             Haz clic en cada célula para ver la justificación y roles → luego clic en cada rol para ver funciones y perfil
           </div>
 
@@ -789,7 +837,7 @@ export default function RoadmapApp() {
             return (
               <div key={ci} style={{ marginBottom: 8 }}>
                 <div onClick={() => toggleCell(ci)} style={{
-                  background: isOpen ? cell.color : "rgba(255,255,255,0.03)",
+                  background: isOpen ? cell.color : "var(--glass-bg-hover)",
                   borderRadius: 12, padding: "12px 16px", cursor: "pointer",
                   border: isOpen ? `1px solid ${cell.accent}33` : "1px solid rgba(255,255,255,0.05)",
                   display: "flex", alignItems: "center", gap: 12, transition: "all 0.25s",
@@ -804,12 +852,12 @@ export default function RoadmapApp() {
                           padding: "2px 8px", borderRadius: 10, fontWeight: 600,
                         }}>{cell.headcount} personas</span>
                         <span style={{
-                          fontSize: 10, color: "#6a7490", background: "rgba(255,255,255,0.05)",
+                          fontSize: 10, color: "var(--text-subtlest)", background: "var(--border-light)",
                           padding: "2px 8px", borderRadius: 10,
                         }}>{cell.roles.length} roles</span>
                       </div>
                     </div>
-                    <div style={{ fontSize: 11, color: "#6a7490", marginTop: 3 }}>{cell.scope}</div>
+                    <div style={{ fontSize: 11, color: "var(--text-subtlest)", marginTop: 3 }}>{cell.scope}</div>
                   </div>
                   <span style={{
                     fontSize: 14, transition: "transform 0.3s",
@@ -825,11 +873,11 @@ export default function RoadmapApp() {
                       borderLeft: `3px solid ${cell.accent}55`,
                     }}>
                       <span style={{ fontWeight: 800 }}>¿Por qué esta célula y cuál es su objetivo central?</span>
-                      <div style={{ marginTop: 6, color: "#a0a8bc", marginBottom: 8 }}>{cell.justification}</div>
+                      <div style={{ marginTop: 6, color: "var(--text-muted)", marginBottom: 8 }}>{cell.justification}</div>
                       {cell.activities && (
                         <div style={{ marginTop: 12, background: "rgba(0,0,0,0.15)", padding: "12px 14px", borderRadius: 8, borderLeft: `2px solid ${cell.accent}44` }}>
                           <div style={{ fontWeight: 700, fontSize: 10, textTransform: "uppercase", letterSpacing: 0.5, color: cell.accent, marginBottom: 8 }}>🎯 Principales Actividades Departamentales:</div>
-                          <ul style={{ margin: 0, paddingLeft: 18, color: "#a0a8bc", fontSize: 11, display: "flex", flexDirection: "column", gap: 6 }}>
+                          <ul style={{ margin: 0, paddingLeft: 18, color: "var(--text-muted)", fontSize: 11, display: "flex", flexDirection: "column", gap: 6 }}>
                             {cell.activities.map((act, idx) => (
                               <li key={idx} style={{ lineHeight: 1.4 }}>{act}</li>
                             ))}
@@ -851,7 +899,7 @@ export default function RoadmapApp() {
                       return (
                         <div key={ri} style={{ marginBottom: 6 }}>
                           <div onClick={() => toggleRole(roleKey)} style={{
-                            background: roleOpen ? "rgba(255,255,255,0.05)" : "rgba(255,255,255,0.03)",
+                            background: roleOpen ? "var(--border-light)" : "var(--glass-bg-hover)",
                             borderRadius: 8, padding: "10px 14px", cursor: "pointer",
                             border: roleOpen ? `1px solid ${cell.accent}33` : "1px solid transparent",
                             transition: "all 0.2s",
@@ -860,7 +908,7 @@ export default function RoadmapApp() {
                               <span style={{ fontSize: 13, fontWeight: 600, color: "#d0d4de" }}>{role.title}</span>
                               <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
                                 {role.qty && (
-                                  <span style={{ fontSize: 9, color: "#6a7490", background: "rgba(255,255,255,0.06)", padding: "2px 6px", borderRadius: 6 }}>
+                                  <span style={{ fontSize: 9, color: "var(--text-subtlest)", background: "var(--border-med)", padding: "2px 6px", borderRadius: 6 }}>
                                     ×{role.qty}
                                   </span>
                                 )}
@@ -875,7 +923,7 @@ export default function RoadmapApp() {
                           {roleOpen && (
                             <div style={{
                               padding: "14px 16px", marginTop: 2,
-                              background: "rgba(255,255,255,0.02)", borderRadius: 8,
+                              background: "var(--glass-bg)", borderRadius: 8,
                               borderLeft: `3px solid ${cell.accent}44`,
                             }}>
                               <div style={{ fontSize: 12, color: "#b0b8cc", lineHeight: 1.6, marginBottom: 14 }}>
@@ -901,8 +949,8 @@ export default function RoadmapApp() {
                               </div>
 
                               <div style={{
-                                fontSize: 11, color: "#6a7490", lineHeight: 1.6,
-                                padding: "10px 12px", background: "rgba(255,255,255,0.02)",
+                                fontSize: 11, color: "var(--text-subtlest)", lineHeight: 1.6,
+                                padding: "10px 12px", background: "var(--glass-bg)",
                                 borderRadius: 6, border: "1px solid rgba(255,255,255,0.04)",
                               }}>
                                 <span style={{ fontWeight: 600, color: "#8892b0" }}>📋 Perfil requerido: </span>
@@ -920,7 +968,7 @@ export default function RoadmapApp() {
           })}
 
           <div style={{
-            marginTop: 16, background: "rgba(255,255,255,0.02)", borderRadius: 12, padding: 16,
+            marginTop: 16, background: "var(--glass-bg)", borderRadius: 12, padding: 16,
             border: "1px solid rgba(255,255,255,0.05)",
           }}>
             <div style={{ fontSize: 12, fontWeight: 700, color: "#F0A500", marginBottom: 8 }}>
@@ -931,8 +979,8 @@ export default function RoadmapApp() {
                 <div key={i} style={{ display: "flex", alignItems: "center", gap: 6, padding: 6 }}>
                   <div style={{ width: 8, height: 8, borderRadius: 2, background: c.accent, flexShrink: 0 }} />
                   <div>
-                    <div style={{ fontSize: 11, fontWeight: 600, color: "#ccd0da" }}>{c.title}</div>
-                    <div style={{ fontSize: 10, color: "#4a5270" }}>{c.headcount} · {c.roles.length} roles</div>
+                    <div style={{ fontSize: 11, fontWeight: 600, color: "var(--text-muted)" }}>{c.title}</div>
+                    <div style={{ fontSize: 10, color: "var(--text-nav)" }}>{c.headcount} · {c.roles.length} roles</div>
                   </div>
                 </div>
               ))}
@@ -947,7 +995,7 @@ export default function RoadmapApp() {
         <div style={{ maxWidth: 950, margin: "0 auto", padding: "10px 0" }}>
           <div style={{ textAlign: "center", marginBottom: 30 }}>
             <h2 style={{ fontSize: 18, color: "#7678ED", marginBottom: 4 }}>Jerarquía Mínima Viable y Costo Operativo</h2>
-            <p style={{ fontSize: 12, color: "#6a7490", margin: 0 }}>Clic en cada nodo para ver los roles en detalle. Estructura ajustada (8 personas base).</p>
+            <p style={{ fontSize: 12, color: "var(--text-subtlest)", margin: 0 }}>Clic en cada nodo para ver los roles en detalle. Estructura ajustada (8 personas base).</p>
           </div>
           
           <div style={{ display: "flex", flexDirection: "column", alignItems: "center", marginBottom: 40 }}>
@@ -985,7 +1033,7 @@ export default function RoadmapApp() {
                   return (
                     <div key={originalIdx} style={{ flex: 1, display: "flex", flexDirection: "column" }}>
                       <div onClick={() => toggleHierarchyNode(originalIdx)} style={{
-                        background: isExpanded ? `linear-gradient(135deg, ${cell.color}, ${cell.color}cc)` : "rgba(255,255,255,0.03)", 
+                        background: isExpanded ? `linear-gradient(135deg, ${cell.color}, ${cell.color}cc)` : "var(--glass-bg-hover)", 
                         borderRadius: 12, padding: "14px 10px", cursor: "pointer", transition: "all 0.2s",
                         borderTop: `4px solid ${cell.accent}`, textAlign: "center",
                         borderLeft: "1px solid rgba(255,255,255,0.05)", borderRight: "1px solid rgba(255,255,255,0.05)",
@@ -994,7 +1042,7 @@ export default function RoadmapApp() {
                       }}>
                         <div style={{ fontSize: 13, fontWeight: 700, color: cell.accent, marginBottom: 12, lineHeight: 1.3 }}>{cell.title}</div>
                         <div>
-                            <div style={{ fontSize: 10, color: "#a0a8bc", marginBottom: 3 }}>Plantilla Min.</div>
+                            <div style={{ fontSize: 10, color: "var(--text-muted)", marginBottom: 3 }}>Plantilla Min.</div>
                             <div style={{ background: `${cell.accent}15`, color: cell.accent, fontSize: 12, fontWeight: 800, padding: "4px 12px", borderRadius: 12, display: "inline-block" }}>
                               {min}
                             </div>
@@ -1003,7 +1051,7 @@ export default function RoadmapApp() {
                       {isExpanded && (
                         <div style={{ background: "rgba(0,0,0,0.2)", borderRadius: "0 0 12px 12px", border: `1px solid rgba(255,255,255,0.05)`, borderTop: "none", padding: "12px 10px", marginTop: 0, height: "100%" }}>
                           {cell.roles.map((rol, ri) => (
-                            <div key={ri} style={{ fontSize: 11, color: "#ccd0da", marginBottom: 8, lineHeight: 1.3, paddingBottom: 6, borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
+                            <div key={ri} style={{ fontSize: 11, color: "var(--text-muted)", marginBottom: 8, lineHeight: 1.3, paddingBottom: 6, borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
                               <div style={{ color: cell.accent, fontWeight: 700 }}>• {rol.title}</div>
                               <div style={{ opacity: 0.7, fontSize: 10, marginTop: 2, paddingLeft: 10 }}>{rol.type} {(rol.qty && parseInt(rol.qty.replace(/\D.*/g, ''))) ? `(x${parseInt(rol.qty.replace(/\D.*/g, ''))})` : '(x1)'}</div>
                             </div>
@@ -1026,7 +1074,7 @@ export default function RoadmapApp() {
                   return (
                     <div key={originalIdx} style={{ flex: 1, display: "flex", flexDirection: "column" }}>
                       <div onClick={() => toggleHierarchyNode(originalIdx)} style={{
-                        background: isExpanded ? `linear-gradient(135deg, ${cell.color}, ${cell.color}cc)` : "rgba(255,255,255,0.03)", 
+                        background: isExpanded ? `linear-gradient(135deg, ${cell.color}, ${cell.color}cc)` : "var(--glass-bg-hover)", 
                         borderRadius: 12, padding: "14px 10px", cursor: "pointer", transition: "all 0.2s",
                         borderTop: `4px solid ${cell.accent}`, textAlign: "center",
                         borderLeft: "1px solid rgba(255,255,255,0.05)", borderRight: "1px solid rgba(255,255,255,0.05)",
@@ -1035,7 +1083,7 @@ export default function RoadmapApp() {
                       }}>
                         <div style={{ fontSize: 13, fontWeight: 700, color: cell.accent, marginBottom: 12, lineHeight: 1.3 }}>{cell.title}</div>
                         <div>
-                            <div style={{ fontSize: 10, color: "#a0a8bc", marginBottom: 3 }}>Plantilla Min.</div>
+                            <div style={{ fontSize: 10, color: "var(--text-muted)", marginBottom: 3 }}>Plantilla Min.</div>
                             <div style={{ background: `${cell.accent}15`, color: cell.accent, fontSize: 12, fontWeight: 800, padding: "4px 12px", borderRadius: 12, display: "inline-block" }}>
                               {min}
                             </div>
@@ -1044,7 +1092,7 @@ export default function RoadmapApp() {
                       {isExpanded && (
                         <div style={{ background: "rgba(0,0,0,0.2)", borderRadius: "0 0 12px 12px", border: `1px solid rgba(255,255,255,0.05)`, borderTop: "none", padding: "12px 10px", marginTop: 0, height: "100%" }}>
                           {cell.roles.map((rol, ri) => (
-                            <div key={ri} style={{ fontSize: 11, color: "#ccd0da", marginBottom: 8, lineHeight: 1.3, paddingBottom: 6, borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
+                            <div key={ri} style={{ fontSize: 11, color: "var(--text-muted)", marginBottom: 8, lineHeight: 1.3, paddingBottom: 6, borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
                               <div style={{ color: cell.accent, fontWeight: 700 }}>• {rol.title}</div>
                               <div style={{ opacity: 0.7, fontSize: 10, marginTop: 2, paddingLeft: 10 }}>{rol.type} {(rol.qty && parseInt(rol.qty.replace(/\D.*/g, ''))) ? `(x${parseInt(rol.qty.replace(/\D.*/g, ''))})` : '(x1)'}</div>
                             </div>
@@ -1059,12 +1107,12 @@ export default function RoadmapApp() {
             </div>
           </div>
 
-          <div style={{ marginTop: 40, background: "rgba(255,255,255,0.02)", borderRadius: 16, padding: "24px 32px", border: "1px solid rgba(255,255,255,0.05)" }}>
+          <div style={{ marginTop: 40, background: "var(--glass-bg)", borderRadius: 16, padding: "24px 32px", border: "1px solid rgba(255,255,255,0.05)" }}>
             <h3 style={{ margin: "0 0 20px 0", fontSize: 16, color: "#5BC0BE" }}>Tabla de Proyección Salarial (Promedio de Mercado - El Salvador)</h3>
             <div style={{ overflowX: "auto" }}>
               <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 12, textAlign: "left" }}>
                 <thead>
-                  <tr style={{ background: "rgba(255,255,255,0.05)", color: "#a0a8bc", borderBottom: "1px solid rgba(255,255,255,0.1)" }}>
+                  <tr style={{ background: "var(--border-light)", color: "var(--text-muted)", borderBottom: "1px solid rgba(255,255,255,0.1)" }}>
                     <th style={{ padding: "10px 12px", fontWeight: 600 }}>Área</th>
                     <th style={{ padding: "10px 12px", fontWeight: 600 }}>Puesto / Rol</th>
                     <th style={{ padding: "10px 12px", fontWeight: 600, textAlign: "center" }}>Cantidad Mínima</th>
@@ -1091,7 +1139,7 @@ export default function RoadmapApp() {
                           <tr key={`${ai}-${ri}`} style={{ borderBottom: "1px solid rgba(255,255,255,0.02)", transition: "background 0.2s" }} onMouseEnter={(e) => e.currentTarget.style.background = "rgba(255,255,255,0.04)"} onMouseLeave={(e) => e.currentTarget.style.background = "transparent"}>
                             <td style={{ padding: "12px", color: area.accent, fontWeight: 600, opacity: ri === 0 ? 1 : 0.6 }}>{area.title}</td>
                             <td style={{ padding: "12px", color: "#e0e0e0" }}>{role.title}</td>
-                            <td style={{ padding: "12px", textAlign: "center", fontWeight: 700, color: "#fff" }}>{qty}</td>
+                            <td style={{ padding: "12px", textAlign: "center", fontWeight: 700, color: "var(--text-main)" }}>{qty}</td>
                             <td style={{ padding: "12px", textAlign: "right" }}>$ {unitSalary.toLocaleString('en-US')}.00</td>
                             <td style={{ padding: "12px", textAlign: "right", fontWeight: 700, color: "#7678ED" }}>$ {rowTotal.toLocaleString('en-US')}.00</td>
                           </tr>
@@ -1107,7 +1155,7 @@ export default function RoadmapApp() {
                 </tbody>
               </table>
             </div>
-            <div style={{ fontSize: 10, color: "#6a7490", marginTop: 14, fontStyle: "italic", lineHeight: 1.5 }}>
+            <div style={{ fontSize: 10, color: "var(--text-subtlest)", marginTop: 14, fontStyle: "italic", lineHeight: 1.5 }}>
               * Valores en USD. Los salarios reflejan un estimado del percentil 50 de mercado regional (El Salvador) para roles de TI de esta categoría en industria corporativa. <br/>
               ** Se ha calculado utilizando el headcount <strong>MÍNIMO</strong> requerido descrito en la estructura ajustada a 9 recursos base. Este valor corresponde únicamente a salarios brutos base y NO incluye cargas patronales, aguinaldos, indemnizaciones u otras prestaciones de ley ni cargos gerenciales.
             </div>
@@ -1119,14 +1167,14 @@ export default function RoadmapApp() {
         <div style={{ maxWidth: 750, margin: "0 auto" }}>
           
           {/* TIMELINE CONTRATACIONES */}
-          <div style={{ marginBottom: 30, background: "rgba(255,255,255,0.02)", padding: 24, borderRadius: 16, border: "1px solid rgba(255,255,255,0.05)" }}>
+          <div style={{ marginBottom: 30, background: "var(--glass-bg)", padding: 24, borderRadius: 16, border: "1px solid rgba(255,255,255,0.05)" }}>
             <div style={{ textAlign: "center", marginBottom: 20 }}>
               <h2 style={{ fontSize: 18, color: "#5BC0BE", marginBottom: 4 }}>Timeline de Incorporación de Personal</h2>
-              <p style={{ fontSize: 12, color: "#6a7490", margin: 0 }}>Desliza sobre los puntos para identificar la fecha y perfil a contratar</p>
+              <p style={{ fontSize: 12, color: "var(--text-subtlest)", margin: 0 }}>Desliza sobre los puntos para identificar la fecha y perfil a contratar</p>
             </div>
             <div style={{ position: "relative", height: 16, margin: "25px 0 15px 0" }}>
               {/* Línea base */}
-              <div style={{ position: "absolute", top: "50%", transform: "translateY(-50%)", width: "100%", height: 3, background: "rgba(255,255,255,0.05)", borderRadius: 2 }} />
+              <div style={{ position: "absolute", top: "50%", transform: "translateY(-50%)", width: "100%", height: 3, background: "var(--border-light)", borderRadius: 2 }} />
               
               {/* Hitos */}
               {hiringMilestones.map((hm, i) => {
@@ -1139,7 +1187,7 @@ export default function RoadmapApp() {
                     style={{ 
                       position: "absolute", left: `${leftPos}%`, top: "50%", transform: "translate(-50%, -50%)", 
                       width: isHovered ? 18 : 12, height: isHovered ? 18 : 12, borderRadius: "50%", 
-                      background: hm.color, border: "2px solid #131b2e", cursor: "pointer",
+                      background: hm.color, border: "2px solid var(--bg-gradient-end)", cursor: "pointer",
                       transition: "all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275)", zIndex: isHovered ? 5 : 2,
                       boxShadow: isHovered ? `0 0 14px ${hm.color}88` : "none"
                     }}>
@@ -1152,15 +1200,15 @@ export default function RoadmapApp() {
                         boxShadow: "0 5px 15px rgba(0,0,0,0.5)", pointerEvents: "none", textAlign: "center"
                       }}>
                         <div style={{ fontSize: 12, fontWeight: 800, color: hm.color, marginBottom: 2 }}>{hm.title}</div>
-                        <div style={{ fontSize: 10, color: "#fff" }}>Ingreso: Tarea {hm.taskIndex + 1}</div>
-                        <div style={{ fontSize: 10, color: "#a0a8bc", marginTop: 2, fontStyle: "italic" }}>{timelineTasks[hm.taskIndex]?.date || "15/04/2026"}</div>
+                        <div style={{ fontSize: 10, color: "var(--text-main)" }}>Ingreso: Tarea {hm.taskIndex + 1}</div>
+                        <div style={{ fontSize: 10, color: "var(--text-muted)", marginTop: 2, fontStyle: "italic" }}>{timelineTasks[hm.taskIndex]?.date || "15/04/2026"}</div>
                       </div>
                     )}
                   </div>
                 );
               })}
             </div>
-            <div style={{ display: "flex", justifyContent: "space-between", fontSize: 10, color: "#6a7490", marginTop: 16 }}>
+            <div style={{ display: "flex", justifyContent: "space-between", fontSize: 10, color: "var(--text-subtlest)", marginTop: 16 }}>
               <span>Inicio Fases (15 Abril)</span>
               <span>Finalización del Roadmap</span>
             </div>
@@ -1168,10 +1216,10 @@ export default function RoadmapApp() {
 
           {/* CRONOGRAMA EJECUCION (MAIN BAR) */}
           {/* CRONOGRAMA EJECUCION (GANTT 4 CANALES) */}
-          <div style={{ position: "relative", background: "rgba(255,255,255,0.02)", padding: "24px 24px", borderRadius: 16, border: "1px solid rgba(255,255,255,0.05)" }}>
+          <div style={{ position: "relative", background: "var(--glass-bg)", padding: "24px 24px", borderRadius: 16, border: "1px solid rgba(255,255,255,0.05)" }}>
             <div style={{ textAlign: "center", marginBottom: 30 }}>
               <h2 style={{ fontSize: 18, color: "#7678ED", marginBottom: 4 }}>Cronograma de Ejecución por Área (Gantt)</h2>
-              <p style={{ fontSize: 12, color: "#6a7490", margin: 0 }}>Desliza sobre los bloques para identificar actividades o haz clic para seleccionarlas</p>
+              <p style={{ fontSize: 12, color: "var(--text-subtlest)", margin: 0 }}>Desliza sobre los bloques para identificar actividades o haz clic para seleccionarlas</p>
             </div>
             <div className="scrollable-container">
               <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 30, minWidth: 700 }}>
@@ -1191,7 +1239,7 @@ export default function RoadmapApp() {
                       <div style={{ fontSize: 11, fontWeight: 700, color: areaArea.accent, lineHeight: 1.2 }}>{areaArea.name}</div>
                     </div>
                     {/* Pista del Canal */}
-                    <div style={{ flex: 1, position: "relative", height: 32, background: "rgba(255,255,255,0.03)", borderRadius: 8, border: "1px solid rgba(255,255,255,0.05)" }}>
+                    <div style={{ flex: 1, position: "relative", height: 32, background: "var(--glass-bg-hover)", borderRadius: 8, border: "1px solid rgba(255,255,255,0.05)" }}>
                       {tasksInArea.map((t) => {
                         const isSelected = timelineIndex === t.id;
                         const isHovered = hoveredTaskIndex === t.id;
@@ -1215,7 +1263,7 @@ export default function RoadmapApp() {
                               cursor: "pointer",
                               boxShadow: isSelected ? `0 0 10px ${t.phaseAccent}88` : "none",
                               transition: "all 0.2s",
-                              border: isSelected ? "1px solid #fff" : "1px solid transparent",
+                              border: isSelected ? "1px solid var(--text-main)" : "1px solid transparent",
                               zIndex: isHovered || isSelected ? 10 : 1
                             }}
                           />
@@ -1260,10 +1308,10 @@ export default function RoadmapApp() {
                 <div style={{ fontSize: 11, color: timelineTasks[hoveredTaskIndex].phaseAccent, fontWeight: 800, marginBottom: 4 }}>
                   🗓️ {timelineTasks[hoveredTaskIndex].date} · Tarea {timelineTasks[hoveredTaskIndex].id + 1}
                 </div>
-                <div style={{ fontSize: 13, color: "#fff", lineHeight: 1.4, fontWeight: 500 }}>
+                <div style={{ fontSize: 13, color: "var(--text-main)", lineHeight: 1.4, fontWeight: 500 }}>
                   {timelineTasks[hoveredTaskIndex].task}
                 </div>
-                <div style={{ fontSize: 10, color: "#a0a8bc", marginTop: 6, padding: "4px 8px", background: "rgba(255,255,255,0.05)", borderRadius: 4, display: "inline-block" }}>
+                <div style={{ fontSize: 10, color: "var(--text-muted)", marginTop: 6, padding: "4px 8px", background: "var(--border-light)", borderRadius: 4, display: "inline-block" }}>
                   📍 {timelineTasks[hoveredTaskIndex].track}
                 </div>
               </div>
@@ -1271,7 +1319,7 @@ export default function RoadmapApp() {
             
             {/* Contenido Visual Tarea actual */}
             <div style={{
-              background: "rgba(255,255,255,0.02)", borderRadius: 12, padding: 24, minHeight: 250,
+              background: "var(--glass-bg)", borderRadius: 12, padding: 24, minHeight: 250,
               border: `1px solid ${timelineTasks[timelineIndex].phaseAccent}44`,
               position: "relative", boxShadow: `0 8px 30px ${timelineTasks[timelineIndex].phaseAccent}15`,
               transition: "all 0.4s"
@@ -1290,22 +1338,22 @@ export default function RoadmapApp() {
 
               <div style={{ marginBottom: 14, display: "flex", gap: 8 }}>
                 <div>
-                  <div style={{ fontSize: 10, color: "#6a7490", marginBottom: 4 }}>Área Responsable</div>
-                  <div style={{ fontSize: 13, fontWeight: 600, color: "#fff", background: "rgba(255,255,255,0.04)", padding: "4px 10px", borderRadius: 8, display: "inline-block" }}>
+                  <div style={{ fontSize: 10, color: "var(--text-subtlest)", marginBottom: 4 }}>Área Responsable</div>
+                  <div style={{ fontSize: 13, fontWeight: 600, color: "var(--text-main)", background: "rgba(255,255,255,0.04)", padding: "4px 10px", borderRadius: 8, display: "inline-block" }}>
                     {timelineTasks[timelineIndex].mainArea}
                   </div>
                 </div>
                 <div>
-                  <div style={{ fontSize: 10, color: "#6a7490", marginBottom: 4 }}>Sub-Área / Hito</div>
-                  <div style={{ fontSize: 13, fontWeight: 600, color: "#ccd0da", background: "rgba(255,255,255,0.04)", padding: "4px 10px", borderRadius: 8, display: "inline-block" }}>
+                  <div style={{ fontSize: 10, color: "var(--text-subtlest)", marginBottom: 4 }}>Sub-Área / Hito</div>
+                  <div style={{ fontSize: 13, fontWeight: 600, color: "var(--text-muted)", background: "rgba(255,255,255,0.04)", padding: "4px 10px", borderRadius: 8, display: "inline-block" }}>
                     {timelineTasks[timelineIndex].track}
                   </div>
                 </div>
               </div>
 
               <div style={{ marginBottom: 16 }}>
-                <div style={{ fontSize: 11, color: "#6a7490", marginBottom: 4 }}>Descripción de la tarea</div>
-                <div style={{ fontSize: 15, color: "#fff", lineHeight: 1.5, padding: "0 4px", fontWeight: 500 }}>
+                <div style={{ fontSize: 11, color: "var(--text-subtlest)", marginBottom: 4 }}>Descripción de la tarea</div>
+                <div style={{ fontSize: 15, color: "var(--text-main)", lineHeight: 1.5, padding: "0 4px", fontWeight: 500 }}>
                   {timelineTasks[timelineIndex].task}
                 </div>
               </div>
@@ -1313,11 +1361,11 @@ export default function RoadmapApp() {
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginTop: 16 }}>
                 <div style={{ background: "rgba(91, 192, 190, 0.08)", borderLeft: "3px solid #5BC0BE", padding: "12px 14px", borderRadius: "0 8px 8px 0" }}>
                   <div style={{ fontSize: 10, fontWeight: 700, color: "#5BC0BE", marginBottom: 4, textTransform: "uppercase" }}>Objetivo</div>
-                  <div style={{ fontSize: 11, color: "#a0a8bc", lineHeight: 1.4 }}>{timelineTasks[timelineIndex].objective}</div>
+                  <div style={{ fontSize: 11, color: "var(--text-muted)", lineHeight: 1.4 }}>{timelineTasks[timelineIndex].objective}</div>
                 </div>
                 <div style={{ background: "rgba(240, 165, 0, 0.08)", borderLeft: "3px solid #F0A500", padding: "12px 14px", borderRadius: "0 8px 8px 0" }}>
                   <div style={{ fontSize: 10, fontWeight: 700, color: "#F0A500", marginBottom: 4, textTransform: "uppercase" }}>Entregable</div>
-                  <div style={{ fontSize: 11, color: "#a0a8bc", lineHeight: 1.4 }}>{timelineTasks[timelineIndex].deliverable}</div>
+                  <div style={{ fontSize: 11, color: "var(--text-muted)", lineHeight: 1.4 }}>{timelineTasks[timelineIndex].deliverable}</div>
                 </div>
               </div>
             </div>
@@ -1329,8 +1377,8 @@ export default function RoadmapApp() {
                 disabled={timelineIndex === 0}
                 style={{
                   flex: 1, padding: "14px", borderRadius: 10, fontSize: 14, fontWeight: 600,
-                  background: timelineIndex === 0 ? "rgba(255,255,255,0.02)" : "rgba(255,255,255,0.05)",
-                  color: timelineIndex === 0 ? "#4a5270" : "#e0e0e0",
+                  background: timelineIndex === 0 ? "var(--glass-bg)" : "var(--border-light)",
+                  color: timelineIndex === 0 ? "var(--text-nav)" : "#e0e0e0",
                   border: "none", cursor: timelineIndex === 0 ? "not-allowed" : "pointer",
                   transition: "all 0.2s"
                 }}
@@ -1344,7 +1392,7 @@ export default function RoadmapApp() {
                 style={{
                   flex: 1, padding: "14px", borderRadius: 10, fontSize: 14, fontWeight: 600,
                   background: timelineTasks[timelineIndex].phaseAccent,
-                  color: "#131b2e",
+                  color: "var(--bg-gradient-end)",
                   border: "none", cursor: timelineIndex === timelineTasks.length - 1 ? "not-allowed" : "pointer",
                   transition: "all 0.2s", boxShadow: `0 4px 15px ${timelineTasks[timelineIndex].phaseAccent}33`
                 }}
@@ -1362,7 +1410,7 @@ export default function RoadmapApp() {
             {phases.map((p) => (
               <div key={p.id} onClick={() => togglePhase(p.id)} style={{
                 flex: 1, height: 5, borderRadius: 3, cursor: "pointer", transition: "all 0.3s",
-                background: activePhase === p.id ? p.accent : "rgba(255,255,255,0.08)",
+                background: activePhase === p.id ? p.accent : "var(--btn-nav-active)",
               }} />
             ))}
           </div>
@@ -1372,7 +1420,7 @@ export default function RoadmapApp() {
             return (
               <div key={phase.id} style={{ marginBottom: 8 }}>
                 <div onClick={() => togglePhase(phase.id)} style={{
-                  background: isOpen ? `linear-gradient(135deg, ${phase.color}, ${phase.color}cc)` : "rgba(255,255,255,0.02)",
+                  background: isOpen ? `linear-gradient(135deg, ${phase.color}, ${phase.color}cc)` : "var(--glass-bg)",
                   borderRadius: 12, padding: "12px 16px", cursor: "pointer",
                   border: isOpen ? `1px solid ${phase.accent}33` : "1px solid rgba(255,255,255,0.04)",
                   display: "flex", alignItems: "center", gap: 12, transition: "all 0.25s",
@@ -1383,10 +1431,10 @@ export default function RoadmapApp() {
                       <span style={{ fontSize: 14, fontWeight: 700 }}>{phase.name}</span>
                       <div style={{ display: "flex", gap: 6 }}>
                         <span style={{ fontSize: 10, color: phase.accent, background: `${phase.accent}18`, padding: "2px 8px", borderRadius: 10, fontWeight: 600 }}>{phase.period}</span>
-                        <span style={{ fontSize: 10, color: "#6a7490", background: "rgba(255,255,255,0.05)", padding: "2px 8px", borderRadius: 10 }}>{phaseTaskCount} tareas</span>
+                        <span style={{ fontSize: 10, color: "var(--text-subtlest)", background: "var(--border-light)", padding: "2px 8px", borderRadius: 10 }}>{phaseTaskCount} tareas</span>
                       </div>
                     </div>
-                    <div style={{ fontSize: 11, color: "#6a7490", marginTop: 3 }}>{phase.description}</div>
+                    <div style={{ fontSize: 11, color: "var(--text-subtlest)", marginTop: 3 }}>{phase.description}</div>
                   </div>
                   <span style={{ fontSize: 14, transition: "transform 0.3s", transform: isOpen ? "rotate(90deg)" : "rotate(0deg)", color: "#3a4460" }}>▶</span>
                 </div>
@@ -1401,7 +1449,7 @@ export default function RoadmapApp() {
                       return (
                         <div key={ti} style={{ marginBottom: 6 }}>
                           <div onClick={() => setExpandedTrack(trackOpen ? null : trackKey)} style={{
-                            background: "rgba(255,255,255,0.03)", borderRadius: 8, padding: "9px 12px", cursor: "pointer",
+                            background: "var(--glass-bg-hover)", borderRadius: 8, padding: "9px 12px", cursor: "pointer",
                             border: trackOpen ? `1px solid ${phase.accent}33` : "1px solid transparent",
                             display: "flex", justifyContent: "space-between", alignItems: "center",
                           }}>
@@ -1411,7 +1459,7 @@ export default function RoadmapApp() {
                           {trackOpen && (
                             <div style={{ padding: "6px 0 0 12px" }}>
                               {track.tasks.map((task, tki) => (
-                                <div key={tki} style={{ display: "flex", gap: 8, alignItems: "flex-start", marginBottom: 6, fontSize: 11, color: "#a0a8bc", lineHeight: 1.5 }}>
+                                <div key={tki} style={{ display: "flex", gap: 8, alignItems: "flex-start", marginBottom: 6, fontSize: 11, color: "var(--text-muted)", lineHeight: 1.5 }}>
                                   <span style={{ width: 5, height: 5, borderRadius: "50%", background: phase.accent, flexShrink: 0, marginTop: 5, opacity: 0.7 }} />
                                   {task}
                                 </div>
@@ -1426,13 +1474,13 @@ export default function RoadmapApp() {
               </div>
             );
           })}
-          <div style={{ marginTop: 20, background: "rgba(255,255,255,0.02)", borderRadius: 12, padding: 16, border: "1px solid rgba(255,255,255,0.05)" }}>
+          <div style={{ marginTop: 20, background: "var(--glass-bg)", borderRadius: 12, padding: 16, border: "1px solid rgba(255,255,255,0.05)" }}>
             <div style={{ fontSize: 12, fontWeight: 700, color: "#5BC0BE", marginBottom: 10 }}>Resumen del Roadmap</div>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))", gap: 6 }}>
               {[["4 fases", "30 días a operación continua"], [`${totalTasks} tareas`, "Por área y prioridad"], ["4 células", "Ops, Cloud, Core, Dev"], ["5 plataformas", "ERP, HIS, Odoo 18, AWS/EKS, Red"], ["3 edificios", "Cuartos de comunicaciones"], ["Stack", "React, Next.js, Node.js, Prisma"]].map(([t, d], i) => (
                 <div key={i} style={{ padding: 8 }}>
-                  <div style={{ fontSize: 13, fontWeight: 700, color: "#ccd0da" }}>{t}</div>
-                  <div style={{ fontSize: 10, color: "#4a5270", marginTop: 3 }}>{d}</div>
+                  <div style={{ fontSize: 13, fontWeight: 700, color: "var(--text-muted)" }}>{t}</div>
+                  <div style={{ fontSize: 10, color: "var(--text-nav)", marginTop: 3 }}>{d}</div>
                 </div>
               ))}
             </div>
@@ -1450,7 +1498,7 @@ export default function RoadmapApp() {
 
         {globalPage === "infraestructura" && (
           <div style={{ padding: "80px 40px", maxWidth: 1200, margin: "0 auto", textAlign: "center", animation: "fadeIn 0.4s" }}>
-            <h2 style={{ fontSize: 32, fontWeight: 700, color: "#fff", marginBottom: 24 }}>Infraestructura Técnica</h2>
+            <h2 style={{ fontSize: 32, fontWeight: 700, color: "var(--text-main)", marginBottom: 24 }}>Infraestructura Técnica</h2>
             <div style={{ marginTop: 20 }}>
               <img src="/proyectos_infra.png" alt="Arquitectura de Infraestructura" style={{ width: "100%", borderRadius: 16, border: "1px solid rgba(255,255,255,0.1)", boxShadow: "0 10px 40px rgba(0,0,0,0.5)" }} />
             </div>
@@ -1459,7 +1507,7 @@ export default function RoadmapApp() {
 
         {globalPage === "funciones" && (
           <div style={{ padding: "80px 40px", maxWidth: 1200, margin: "0 auto", textAlign: "center", animation: "fadeIn 0.4s" }}>
-            <h2 style={{ fontSize: 32, fontWeight: 700, color: "#fff", marginBottom: 24 }}>Funciones de Tecnología</h2>
+            <h2 style={{ fontSize: 32, fontWeight: 700, color: "var(--text-main)", marginBottom: 24 }}>Funciones de Tecnología</h2>
             <div style={{ marginBottom: 30 }}>
               <a 
                 href="https://app3.mindmup.com/map/?id=3ede0197-4c88-43e5-bdad-c54d545f5b63" 
@@ -1467,7 +1515,7 @@ export default function RoadmapApp() {
                 rel="noopener noreferrer"
                 style={{
                   display: "inline-flex", alignItems: "center", gap: 8, padding: "12px 24px",
-                  background: "linear-gradient(90deg, #2A9D8F, #21867a)", color: "#fff",
+                  background: "linear-gradient(90deg, #2A9D8F, #21867a)", color: "var(--text-main)",
                   borderRadius: 8, textDecoration: "none", fontWeight: 700, fontSize: 16,
                   boxShadow: "0 4px 14px rgba(42, 157, 143, 0.4)", transition: "all 0.2s"
                 }}
@@ -1484,8 +1532,8 @@ export default function RoadmapApp() {
         {globalPage === "procesos" && (
           <div style={{ padding: "40px", height: "100%", display: "flex", flexDirection: "column", animation: "fadeIn 0.4s" }}>
             <div style={{ maxWidth: 1400, width: "100%", margin: "0 auto", flex: 1, display: "flex", flexDirection: "column" }}>
-              <h2 style={{ fontSize: 32, fontWeight: 700, color: "#fff", marginBottom: 24, textAlign: "center" }}>Procesos IT</h2>
-              <div style={{ flex: 1, background: "#fff", borderRadius: 16, overflow: "hidden", border: "1px solid rgba(255,255,255,0.1)", boxShadow: "0 10px 40px rgba(0,0,0,0.5)" }}>
+              <h2 style={{ fontSize: 32, fontWeight: 700, color: "var(--text-main)", marginBottom: 24, textAlign: "center" }}>Procesos IT</h2>
+              <div style={{ flex: 1, background: "var(--text-main)", borderRadius: 16, overflow: "hidden", border: "1px solid rgba(255,255,255,0.1)", boxShadow: "0 10px 40px rgba(0,0,0,0.5)" }}>
                 <iframe 
                   src="https://docs.google.com/spreadsheets/d/1ASMPrVludhie-LWZVs9UdyodbM6LD4RS/edit?usp=sharing&rm=minimal" 
                   style={{ width: "100%", height: "100%", border: "none", minHeight: "800px" }}

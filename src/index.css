@@ -1,15 +1,37 @@
 :root {
-  --text: #6b6375;
-  --text-h: #08060d;
-  --bg: #fff;
-  --border: #e5e4e7;
-  --code-bg: #f4f3ec;
-  --accent: #aa3bff;
-  --accent-bg: rgba(170, 59, 255, 0.1);
-  --accent-border: rgba(170, 59, 255, 0.5);
-  --social-bg: rgba(244, 243, 236, 0.5);
-  --shadow:
-    rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
+  /* GLOBAL THEME TOKENS - LIGHT MODE (Default) */
+  --bg-main: #f8fafc;
+  --bg-sidebar: var(--text-main)fff;
+  --bg-overlay: rgba(0, 0, 0, 0.4);
+  
+  --bg-gradient-start: #f1f5f9;
+  --bg-gradient-mid: var(--text-secondary);
+  --bg-gradient-end: #cbd5e1;
+  
+  --text-main: #0f172a;
+  --text-secondary: #334155;
+  --text-muted: #64748b;
+  --text-subtlest: #94a3b8;
+  --text-nav: #475569;
+  
+  --border-light: rgba(0, 0, 0, 0.05);
+  --border-med: rgba(0, 0, 0, 0.1);
+  --border-dark: rgba(0, 0, 0, 0.15);
+  
+  --glass-bg: rgba(255, 255, 255, 0.8);
+  --glass-bg-hover: rgba(255, 255, 255, 0.95);
+  
+  --btn-nav-active: rgba(0, 0, 0, 0.05);
+  --input-bg: #f1f5f9;
+  
+  --table-bg-dark: #0f172a;
+  --table-bg-light: var(--text-main)fff;
+  --table-bg-alt: #f8fafc;
+  --table-text-head: #64748b;
+  --border-table: var(--text-secondary);
+  --border-table-light: #f1f5f9;
+
+  --shadow-main: 0 4px 15px rgba(0, 0, 0, 0.05), 0 2px 4px rgba(0, 0, 0, 0.02);
 
   --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
   --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
@@ -17,9 +39,9 @@
 
   font: 18px/145% var(--sans);
   letter-spacing: 0.18px;
-  color-scheme: light dark;
-  color: var(--text);
-  background: var(--bg);
+  color-scheme: light;
+  color: var(--text-main);
+  background: var(--bg-main);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -30,24 +52,47 @@
   }
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --text: #9ca3af;
-    --text-h: #f3f4f6;
-    --bg: #16171d;
-    --border: #2e303a;
-    --code-bg: #1f2028;
-    --accent: #c084fc;
-    --accent-bg: rgba(192, 132, 252, 0.15);
-    --accent-border: rgba(192, 132, 252, 0.5);
-    --social-bg: rgba(47, 48, 58, 0.5);
-    --shadow:
-      rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
-  }
+body.dark {
+  /* GLOBAL THEME TOKENS - DARK MODE */
+  --bg-main: var(--bg-main);
+  --bg-sidebar: var(--bg-sidebar);
+  --bg-overlay: rgba(0, 0, 0, 0.7);
+  
+  --bg-gradient-start: var(--bg-gradient-start);
+  --bg-gradient-mid: var(--bg-gradient-mid);
+  --bg-gradient-end: var(--bg-gradient-end);
+  
+  --text-main: var(--text-main)fff;
+  --text-secondary: var(--text-secondary);
+  --text-muted: #a0a8bc;
+  --text-subtlest: #6a7490;
+  --text-nav: #bac4d9;
+  
+  --border-light: var(--border-light);
+  --border-med: rgba(255, 255, 255, 0.1);
+  --border-dark: rgba(255, 255, 255, 0.2);
+  
+  --glass-bg: rgba(255, 255, 255, 0.02);
+  --glass-bg-hover: var(--border-light);
 
-  #social .button-icon {
-    filter: invert(1) brightness(2);
-  }
+  --btn-nav-active: rgba(255, 255, 255, 0.08);
+  --input-bg: var(--border-light);
+
+  --table-bg-dark: #0f172a;
+  --table-bg-light: #121c30;
+  --table-bg-alt: #0a1120;
+  --table-text-head: #8892b0;
+  --border-table: var(--border-table);
+  --border-table-light: rgba(255, 255, 255, 0.03);
+
+  --shadow-main: 0 10px 40px rgba(0,0,0,0.5);
+
+  color-scheme: dark;
+}
+
+/* Global Transitions for smooth theme switching */
+*, *::before, *::after {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 body {
@@ -67,19 +112,19 @@ body {
 .app-container {
   display: flex;
   min-height: 100vh;
-  background: #0b1120;
-  color: #e2e8f0;
+  background: var(--bg-main);
+  color: var(--text-secondary);
   font-family: system-ui, sans-serif;
   flex-direction: row;
 }
 
 .mobile-header {
   display: none;
-  background: #060913;
+  background: var(--bg-sidebar);
   padding: 16px 24px;
   align-items: center;
   justify-content: space-between;
-  border-bottom: 1px solid rgba(255,255,255,0.05);
+  border-bottom: 1px solid var(--border-light);
   position: sticky;
   top: 0;
   z-index: 50;
@@ -88,7 +133,7 @@ body {
 .hamburger-btn {
   background: transparent;
   border: none;
-  color: #fff;
+  color: var(--text-main);
   font-size: 24px;
   cursor: pointer;
   padding: 0;
@@ -98,8 +143,8 @@ body {
 
 .sidebar {
   width: 250px;
-  border-right: 1px solid rgba(255,255,255,0.05);
-  background: #060913;
+  border-right: 1px solid var(--border-light);
+  background: var(--bg-sidebar);
   display: flex;
   flex-direction: column;
   flex-shrink: 0;
@@ -119,7 +164,7 @@ body {
   height: 100vh;
   overflow-y: auto;
   position: relative;
-  background: linear-gradient(160deg, #070b14 0%, #0f1729 40%, #131b2e 100%);
+  background: linear-gradient(160deg, var(--bg-gradient-start) 0%, var(--bg-gradient-mid) 40%, var(--bg-gradient-end) 100%);
 }
 
 .scrollable-container {
